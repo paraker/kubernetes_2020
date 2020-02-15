@@ -6,8 +6,7 @@ The master node contains four functions.<br>
 1. command?
 1. etcd
 
-#![master node](pictures/k8s_master.png =250x)
-<img src="pictures/k8s_master.png" width="200">
+<img src="pictures/k8s_master.png" width="800">
 ## node (worker node/minion)
 Runs `kubelet` (communicates with the api on master) and `k-proxy`.<br>
 The nodes exist for one purpose, to run pods.<br>
