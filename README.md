@@ -7,9 +7,8 @@
 
 Covers:
 * pods
-* deployments
 * services
-* ReplicaSets
+* Controllers (ReplicaSets, daemonsets, statefulsets, deployments)
 * namespaces
 * kustomize
 * imperative vs declarative kubectl

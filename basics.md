@@ -48,11 +48,64 @@ kubectl logs -f web1-74c74989b5-jmsvg
 172.17.0.1 - - [16/Feb/2020:07:42:35 +0000] "GET / HTTP/1.1" 200 7240 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:72.0) Gecko/20100101 Firefox/72.0" "-"
 ```
 
-# deployments
-A deployment declares the state of `pods` or `ReplicaSets`.<br>
-You describe a desired state in a Deployment, and the Deployment Controller changes the actual state to the desired state at a controlled rate.<br>
+# Controllers
+## ReplicaSet (rs for short)
+A `ReplicaSet’s` purpose is to maintain a stable set of `replica Pods` running at any given time. As such, it is often used to guarantee the availability of a specified number of identical `Pods`.<br>
+In other words, the `rs` will make sure that new replicas of pods are spun up if others are killed for whatever reason.<br>
 
-## display your deployments
+We used `rs` to create 20 web servers as an example with the imperative `kubectl scale deployment --replicas 20 web1`<br> 
+However, it is recommended to use declarative `deployments` that will create `rs` for you automatically, rather than doing an imperative creation.<br>
+
+### view your replicasets
+```bash
+kubectl get replicasets          
+NAME              DESIRED   CURRENT   READY   AGE
+web1-74c74989b5   20        20        20      6h24m
+```
+
+### view details about your replicasets
+```bash
+kubectl describe replicasets web1-74c74989b5 
+Name:           web1-74c74989b5
+Namespace:      default
+Selector:       app=web1,pod-template-hash=74c74989b5
+Labels:         app=web1
+                pod-template-hash=74c74989b5
+Annotations:    deployment.kubernetes.io/desired-replicas: 20
+```
+
+## DaemonSet
+A `DaemonSet` ensures that all (or some) Nodes run a copy of a specific `pod`.<br>
+This is great for example for `fluentd`, `datadog agent` etc.<br>
+Things you want on all nodes in your cluster, like logging etc.
+
+```bash
+# example daemonset is available at:
+kubectl apply -f https://k8s.io/examples/controllers/daemonset.yaml
+```
+
+## StatefulSet
+`StatefulSet` is the workload API object used to manage stateful applications.<br>
+Manages the deployment and scaling of a set of `Pods` , and provides guarantees about the ordering and uniqueness of these `Pods`.
+
+Like a `Deployment`, a `StatefulSet` manages `Pods` that are based on an identical container spec.<br>
+Unlike a `Deployment`, a `StatefulSet` maintains a sticky identity for each of their `Pods`.<br>
+These `pods` are created from the same spec, but are not interchangeable: each has a persistent identifier that it maintains across any rescheduling.
+
+StatefulSets can come in handy when your apps need:
+* Stable, unique network identifiers.
+* Stable, persistent storage.
+* Ordered, graceful deployment and scaling.
+* Ordered, automated rolling updates.
+
+## deployments
+A `deployment` declares the state of `pods` and `ReplicaSets`.<br>
+`Deployments` are used for reliability, load-balancing and scaling.<br>
+You describe a desired state in a `Deployment`, and the `Deployment Controller` changes the actual state to the desired state at a controlled rate.<br>  
+
+`Rolling updates` is another feature of `deployments`. 
+
+### display your deployments
 View your deployments with `kubectl get deployments <deployment name>` or `kubectl get deploy` for short and for all deployments.
 ```bash
 kubectl get deploy web1                       
@@ -75,7 +128,7 @@ NAME   READY   UP-TO-DATE   AVAILABLE   AGE     CONTAINERS   IMAGES             
 web1   1/1     1            1           7h47m   hello        nginxdemos/hello   app=web1
 ```
 
-## details about your deployments
+### details about your deployments
 You can get a bunch of good details about your deployments with `kubectl describe deployments <deployment name>`.<br>
 Super useful for troubleshooting and understanding fully what's in your deployment.<br>
 Such as the desired replicas, the docker image, the volumes etc.
@@ -90,6 +143,12 @@ Selector:               app=web1
 Replicas:               20 desired | 20 updated | 20 total | 20 available | 0 unavailable
 StrategyType:           RollingUpdate
 ```
+
+### autoscale deployments
+You can let your deployment controller `autoscale` a deployment for you.<br>
+It will judge based on oad I suppose?.
+This is done imperatively with the command `kubectl autoscale deployment <deployment name> --min=<min> --max=<max>`<br>
+Not sure how this is done through `yaml`.
 
 # services
 You can view your exposed services by issuing the command `kubectl get service <service name>`
@@ -120,29 +179,6 @@ Endpoints:                172.17.0.10:80,172.17.0.11:80,172.17.0.12:80 + 17 more
 Session Affinity:         None
 External Traffic Policy:  Cluster
 Events:                   <none>
-```
-
-# ReplicaSet
-
-A ReplicaSet’s purpose is to maintain a stable set of replica Pods running at any given time. As such, it is often used to guarantee the availability of a specified number of identical Pods.<br>
-We used this to create 20 web servers as an example with the imperative `kubectl scale deployment --replicas 20 web1`
-
-## view your replicasets
-```bash
-kubectl get replicasets          
-NAME              DESIRED   CURRENT   READY   AGE
-web1-74c74989b5   20        20        20      6h24m
-```
-
-## view details about your replicasets
-```bash
-kubectl describe replicasets web1-74c74989b5 
-Name:           web1-74c74989b5
-Namespace:      default
-Selector:       app=web1,pod-template-hash=74c74989b5
-Labels:         app=web1
-                pod-template-hash=74c74989b5
-Annotations:    deployment.kubernetes.io/desired-replicas: 20
 ```
 
 # namespaces
@@ -265,7 +301,10 @@ Labels:                 app=redis
 kubectl delete deployment -l app=redis                                                     
 deployment.apps "redis-master" deleted
 ```
-
+Or you can delete the deployment with the same file that you deployed
+```bash
+kubectl delete -f https://k8s.io/examples/application/guestbook/redis-master-deployment.yaml
+```
 
 # kustomize
 `kustomize` started out as a standalone tool for customisation of kubernetes objects through `kustomization files`.<br>
