@@ -151,6 +151,37 @@ This is done imperatively with the command `kubectl autoscale deployment <deploy
 Not sure how this is done through `yaml`.
 
 # services
+Kubernetes Pods are mortal. They are born and when they die, they are not resurrected.<br>
+If you use a Deployment to run your app, it can create and destroy Pods dynamically.<br>
+Each Pod gets its own IP address, however in a Deployment, the set of Pods running in one moment in time could be different from the set of Pods running that application a moment later.
+
+`Services` is an abstraction of a logical set of pods.<br>
+`Services` defines a policy (technically an API endpoint) of how you can access these pods.<br>
+So for pods to be able to talk to each other and maintain that connectivity, you need `services`.<br>
+
+Also, for your own web connectivity for example to a web service, you need to expose the services to the outside world.<br>
+If not, the pod's internal cluster ip address will never be reachable by your computer.<br>
+
+## services example with labels
+Suppose you have a set of Pods that each listen on TCP port 9376 and carry a `label` `app=MyApp`
+```bash
+# example services yaml file
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  selector:
+    app: MyApp
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9376
+```
+This specification creates a new `Service object` named “my-service”, which targets TCP port 9376 on any Pod with the `app=MyApp` label and exposes port 80 to the outside world.<br>
+Kubernetes assigns this Service an IP address (sometimes called the “cluster IP”)<br>
+The controller for the Service selector continuously scans for Pods that match its selector (label in this case) and updates the `endpoint`.
+
 You can view your exposed services by issuing the command `kubectl get service <service name>`
 
 ## View your services
