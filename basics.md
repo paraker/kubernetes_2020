@@ -2,7 +2,7 @@
 Shout instructions
 
 ### Create a deployment
-```bash
+```yaml
 # Create a deployment from a demo nginx hello world image
 kubectl create deployment --image nginxdemos/hello web1
 deployment.apps/web1 created
