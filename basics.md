@@ -68,8 +68,17 @@ NAME   READY   UP-TO-DATE   AVAILABLE   AGE
 web1   1/1     1            1           3m50s
 ```
 
+wide output is available with `--output=wide`. Useful to see images and labels (selector).
+```bash
+kubectl get deployments --output=wide
+NAME   READY   UP-TO-DATE   AVAILABLE   AGE     CONTAINERS   IMAGES             SELECTOR
+web1   1/1     1            1           7h47m   hello        nginxdemos/hello   app=web1
+```
+
 ## details about your deployments
-You can get a bunch of good details about your deployments with `kubectl describe deployments <deployment name>`
+You can get a bunch of good details about your deployments with `kubectl describe deployments <deployment name>`.<br>
+Super useful for troubleshooting and understanding fully what's in your deployment.<br>
+Such as the desired replicas, the docker image, the volumes etc.
 ```bash
 kubectl describe deployments web1
 Name:                   web1
@@ -94,7 +103,7 @@ web1   LoadBalancer   10.102.40.76   <pending>     80:30067/TCP   131m
 
 ## View details of your services
 With the `kubectl describe` command you get a new depth of information about your environment.<br>
-With this you can see the namespace
+With this you can see the namespace, IPs, ports, etc etc
 ```bash
 kubectl describe service web1
 Name:                     web1
