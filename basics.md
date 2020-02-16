@@ -22,15 +22,30 @@ NAME   READY   UP-TO-DATE   AVAILABLE   AGE
 web1   1/1     1            1           3m50s
 ~~~~
 
-# Scale your deployment
-You can scale your deployment by issuing `kubectl scale deployment --replicas \<desired number\> \<deployment name\>`<br>
+### Scale your deployment
+You can scale your deployment by issuing `kubectl scale deployment --replicas <desired number> <deployment name>`<br>
 ~~~~
 kubectl scale deployment --replicas 20 web1            
 deployment.apps/web1 scaled
+
+# view your new 20 deployments slowly become ready
+kubectl get deploy                         
+NAME   READY   UP-TO-DATE   AVAILABLE   AGE
+web1   2/20    20           2           7m48s
 ~~~~
-➜  kubernetes_2020 git:(master) kubectl expose deployment web1 --port=80 --type=LoadBalancer
+
+### expose a deployment
+Make ports available by using `kubectl expose deployment <deployment name> --port=<port> --type=<type>`
+~~~~
+# Simple LoadBalancer example on port 80
+kubectl expose deployment web1 --port=80 --type=LoadBalancer
 service/web1 exposed
-➜  kubernetes_2020 git:(master) minikube service web1
+~~~~
+
+### Minikube special to connect to your deployment's load-balancer
+minikube that we run in this course has a command to get the load-balancer URL from your deployment and automatically start your default browser. This is done with `minikube service <service name>`
+~~~~
+minikube service web1
 |-----------|------|-------------|-----------------------------|
 | NAMESPACE | NAME | TARGET PORT |             URL             |
 |-----------|------|-------------|-----------------------------|
