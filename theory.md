@@ -6,7 +6,7 @@ The master node contains four functions.<br>
 1. controller manager
 1. etcd (distributed db. The only stateful piece of the k8s master)
 
-![master](pictures/master_node.png)
+![master](pictures/k8s_master.png)
 
 ## node (worker node/minion)
 Runs `kubelet` (communicates with the api on master) and `k-proxy`.<br>
