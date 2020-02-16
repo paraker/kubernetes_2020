@@ -2,11 +2,11 @@
 Shout instructions
 
 ### Create a deployment
-~~~~
+```bash
 # Create a deployment from a demo nginx hello world image
 kubectl create deployment --image nginxdemos/hello web1
 deployment.apps/web1 created
-~~~~
+```
 ### View your deployment
 View your deployments with `kubectl get deploy`
 ~~~~
