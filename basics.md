@@ -19,6 +19,15 @@ web1-74c74989b5-dzqwl   1/1     Running   2          120m
 web1-74c74989b5-k7htc   1/1     Running   2          120m
 --- 
 ```
+You can customise your output by using `--output=` or `-o=`.<br>
+One example is `--output=wide` which gives you for example your IP address and the node of that pod.
+
+```bash
+kubectl get po -o=wide
+NAME                    READY   STATUS    RESTARTS   AGE   IP           NODE       NOMINATED NODE   READINESS GATES
+web1-74c74989b5-jmsvg   1/1     Running   0          49m   172.17.0.2   minikube   <none>           <none>
+```
+
 ## details about your pods
 You can display a great deal of details about your pods with `kubectl describe pod <pod name>`<br>
 For example you can see their `namespace`, which `node` they are on, their IP etc.
@@ -28,6 +37,15 @@ Name:         web1-74c74989b5-2kkbv
 Namespace:    default
 Priority:     0
 Node:         minikube/192.168.99.100
+```
+
+## logs from your pods
+Just like in docker, you can tail the logs from a group of containers.<br>
+You do this with `kubectl logs -f <name of pod>`
+```bash
+kubectl logs -f web1-74c74989b5-jmsvg                             
+
+172.17.0.1 - - [16/Feb/2020:07:42:35 +0000] "GET / HTTP/1.1" 200 7240 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:72.0) Gecko/20100101 Firefox/72.0" "-"
 ```
 
 # deployments
@@ -194,10 +212,183 @@ minikube service web1
 ```
 
 # Declarative kubectl
-Tell it what you want the end state to look like
-Point to manifests (collection of files or a single file)
+Tell it what you want the end state to look like.<br>
+Point to `manifests` (a metadata file for an accompanying collection of files or a single file).<br>
+These files are either in `yaml` or in `json`.<br>
+These are at runtime converted to `json` and sent to the `kubernetes api`.
 ```bash
-kubectl deploy -f <manifest file>
+kubectl deploy -f <manifest file or URL>
 ```
-## kustomize
-When you want to store a secret, you can amend your deployment?
+## deploy from a URL or file
+Let's look at an example of deploying a wordpress blog by declaring state.
+```bash
+# example for deploying a redis master
+kubectl apply -f https://k8s.io/examples/application/guestbook/redis-master-deployment.yaml
+
+# confirm that your deployment was created
+kubectl get deployments
+NAME           READY   UP-TO-DATE   AVAILABLE   AGE
+redis-master   1/1     1            1           13m
+
+# Confirm that you pod was created
+kubectl get pods   
+NAME                            READY   STATUS    RESTARTS   AGE
+redis-master-7db7f6579f-8zkq7   1/1     Running   0          13m
+
+# tail logs from redis master
+kubectl logs -f redis-master-7db7f6579f-8zkq7
+```
+## delete deployments
+You can clean up the whole deployment with `kubectl delete deployment <deployment name>`<br>
+```bash
+kubectl delete deployment redis-master
+deployment.apps "redis-master" deleted
+```
+If you want to delete multiple deployments at the same time you can point to their `label`.<br>
+The label is found by using the `kubectl describe deployment <name>`
+
+```bash
+#Find the label
+kubectl describe deployment redis-master
+Labels:                 app=redis
+
+# delete by label
+kubectl delete deployment -l app=redis                                                     
+deployment.apps "redis-master" deleted
+```
+
+
+# kustomize
+`kustomize` started out as a standalone tool for customisation of kubernetes objects through `kustomization files`.<br>
+However, since `kubectl` version 1.14, `kubectl` can utilise the `kustomization files` too! <br>
+
+## secrets and configmaps 
+Kustomize can be used to generate resources - `kubernetes secrets` and `configmaps`
+
+
+Create a file for password info
+```bash
+cat password.txt      
+username=admin
+password=secret
+```
+Create a kustmization file for a secret
+```bash
+cat kustomization.yaml 
+secretGenerator:
+- name: example-secret-1
+  files:
+  - password.txt
+```
+View what kustomize would produce with `kubectl kustomize <kustomize dir>`
+```bash
+kubectl kustomize ./  
+apiVersion: v1
+data:
+  password.txt: dXNlcm5hbWU9YWRtaW4KcGFzc3dvcmQ9c2VjcmV0Cg==
+kind: Secret
+metadata:
+  name: example-secret-1-t2kt65hgtb
+type: Opaque
+```
+Actually execute the kustomization with `kubectl apply --kustomize <kustomize dir>` or just `-k` for short.
+```bash
+kubectl apply -k ./                                                                        
+secret/example-secret-1-t2kt65hgtb created
+```
+Verify that your secret was created
+```bash
+kubectl get secrets        
+NAME                          TYPE                                  DATA   AGE
+example-secret-1-t2kt65hgtb   Opaque                                1      4m37s
+```
+
+## setting cross-cutting fields
+By cross-cutting fields we mean configuration fields that span an entire `project`.<br>
+Such as setting the same `label` across all resources in a `project`.<br>
+Or set the same `namespace`, or `name-prefixes`.<br>
+Let's have a look at an example of a normal deployment yaml file.
+```bash
+# base deployment file
+cat deployment.yaml   
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+```
+We specify a kustomization file to set namespace, name prefix, suffix, label, annotation.<br>
+We specify which resources that this should affect.
+```bash
+# kustomization file
+cat kustomization.yaml      
+namespace: my-namespace
+namePrefix: dev-
+nameSuffix: "-001"
+commonLabels:
+  app: bingo
+commonAnnotations:
+  oncallPager: 800-555-1212
+resources:
+- deployment.yaml
+```
+Let's look at the result. We issue `kubectl kustomize ./` to run `kustomize` in the pwd.
+```bash
+# Resulting file. Notice the name-prefix, suffix, label and annotation. 
+kubectl kustomize ./
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    oncallPager: 800-555-1212
+  labels:
+    app: bingo
+  name: dev-nginx-deployment-001
+  namespace: my-namespace
+spec:
+  selector:
+    matchLabels:
+      app: bingo
+  template:
+    metadata:
+      annotations:
+        oncallPager: 800-555-1212
+      labels:
+        app: bingo
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+```
+
+# All api resources
+If you want to see all available api resources you can get them with kubectl.<br>
+Simply issue the command `kubectl api-resource` and you get a big list of resources.<br>
+You can use this to find the shortnames for the resources as an example.
+
+```bash
+kubectl api-resources       
+NAME                              SHORTNAMES   APIGROUP                       NAMESPACED   KIND
+bindings                                                                      true         Binding
+componentstatuses                 cs                                          false        ComponentStatus
+configmaps                        cm                                          true         ConfigMap
+endpoints                         ep                                          true         Endpoints
+events                            ev                                          true         Event
+limitranges                       limits                                      true         LimitRange
+namespaces                        ns                                          false        Namespace
+nodes                             no                                          false        Node
+persistentvolumeclaims            pvc                                         true         PersistentVolumeClaim
+```
