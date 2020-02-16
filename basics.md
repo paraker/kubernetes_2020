@@ -162,9 +162,20 @@ So for pods to be able to talk to each other and maintain that connectivity, you
 Also, for your own web connectivity for example to a web service, you need to expose the services to the outside world.<br>
 If not, the pod's internal cluster ip address will never be reachable by your computer.<br>
 
-## services example with labels
+## ServiceTypes - four types of services
+There are four types of services that you can create with kubernetes:
+* ClusterIP: Exposes the Service on a cluster-internal IP. Choosing this value makes the Service only reachable from within the cluster. This is the default ServiceType.
+* LoadBalancer: Exposes the Service externally using a cloud provider’s load balancer. NodePort and ClusterIP Services, to which the external load balancer routes, are automatically created.
+* NodePort: Exposes the Service on each Node’s IP at a static port (the NodePort). A ClusterIP Service, to which the NodePort Service routes, is automatically created. You’ll be able to contact the NodePort Service, from outside the cluster, by requesting <NodeIP>:<NodePort>.
+* ExternalName: Maps the Service to the contents of the externalName field (e.g. foo.bar.example.com), by returning a CNAME record 
+
+## imperative service example
+This is an example of how you can imperatively create a service with `kubectl`<br>
+`kubectl expose deployment web1 --port=80 --type=LoadBalancer`
+
+## services example with labels - ClusterIP
 Suppose you have a set of Pods that each listen on TCP port 9376 and carry a `label` `app=MyApp`
-```bash
+```yaml
 # example services yaml file
 apiVersion: v1
 kind: Service
@@ -178,8 +189,11 @@ spec:
       port: 80
       targetPort: 9376
 ```
-This specification creates a new `Service object` named “my-service”, which targets TCP port 9376 on any Pod with the `app=MyApp` label and exposes port 80 to the outside world.<br>
+
+Apply this with `kubectl apply -f service.yaml`.<br>
+This specification creates a new `Service object` named “my-service”, which targets TCP port 9376 on any Pod with the `app=MyApp` label and exposes port 80 to the rest of the cluster.<br>
 Kubernetes assigns this Service an IP address (sometimes called the “cluster IP”)<br>
+Note that this in only reachable by the cluster itself.<br>
 The controller for the Service selector continuously scans for Pods that match its selector (label in this case) and updates the `endpoint`.
 
 You can view your exposed services by issuing the command `kubectl get service <service name>`
@@ -211,6 +225,35 @@ Session Affinity:         None
 External Traffic Policy:  Cluster
 Events:                   <none>
 ```
+
+# ingress - HTTP/S
+A different approach than services to expose HTTP/S.<br>
+Ingress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster.<br>
+Traffic routing is controlled by rules defined on the Ingress resource.<br>
+Ingress can provide load balancing, SSL termination and name-based virtual hosting.<br>
+This is typically the service that is used in production systems that faces the Internet.
+
+## ingress resource
+The Ingress spec has all the information needed to configure a load balancer or proxy server. Most importantly, it contains a list of rules matched against all incoming requests. Ingress resource only supports rules for directing HTTP traffic.
+```yaml
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: test-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /testpath
+        backend:
+          serviceName: test
+          servicePort: 80
+```
+
+## ingress controller
+`ingress-nginx` is an example, or `AWS ALB Ingress Controller` enables ingress using the `AWS Application Load Balancer`.
 
 # namespaces
 Namespaces are intended for use in environments with many users spread across multiple teams, or projects.<br>
@@ -360,7 +403,7 @@ secretGenerator:
   - password.txt
 ```
 View what kustomize would produce with `kubectl kustomize <kustomize dir>`
-```bash
+```yaml
 kubectl kustomize ./  
 apiVersion: v1
 data:
@@ -387,7 +430,7 @@ By cross-cutting fields we mean configuration fields that span an entire `projec
 Such as setting the same `label` across all resources in a `project`.<br>
 Or set the same `namespace`, or `name-prefixes`.<br>
 Let's have a look at an example of a normal deployment yaml file.
-```bash
+```yaml
 # base deployment file
 cat deployment.yaml   
 apiVersion: apps/v1
@@ -411,7 +454,7 @@ spec:
 ```
 We specify a kustomization file to set namespace, name prefix, suffix, label, annotation.<br>
 We specify which resources that this should affect.
-```bash
+```yaml
 # kustomization file
 cat kustomization.yaml      
 namespace: my-namespace
@@ -425,7 +468,7 @@ resources:
 - deployment.yaml
 ```
 Let's look at the result. We issue `kubectl kustomize ./` to run `kustomize` in the pwd.
-```bash
+```yaml
 # Resulting file. Notice the name-prefix, suffix, label and annotation. 
 kubectl kustomize ./
 apiVersion: apps/v1
