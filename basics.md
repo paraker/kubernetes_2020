@@ -514,3 +514,86 @@ namespaces                        ns                                          fa
 nodes                             no                                          false        Node
 persistentvolumeclaims            pvc                                         true         PersistentVolumeClaim
 ```
+
+## Persistent Storage
+Containers have ephemeral storage by default, i.e. when they shut down the storage is lost.<br>
+Stateful applications don't fare well with this approach so kubernetes offers a range of [persistent volume storage options](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#types-of-persistent-volumes).<br>
+This is useful for sharing storage between containers as well, even for stateless apps.<br>
+
+You typically create persistent volumes with the declarative yaml approach.<br>
+`PersistentVolume` (PV) are created by admins. 
+
+```yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv0003
+spec:
+  capacity:
+    storage: 5Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Recycle
+  storageClassName: slow
+  mountOptions:
+    - hard
+    - nfsvers=4.1
+  nfs:
+    path: /tmp
+    server: 172.17.0.2
+```
+`PersistentVolumeClaims` (PVC) are request to use that storage by clients.
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: myclaim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 8Gi
+  storageClassName: slow
+  selector:
+    matchLabels:
+      release: "stable"
+    matchExpressions:
+      - {key: environment, operator: In, values: [dev]}
+```
+
+Commands to view `PV` and `PVC` for an example deployment for a wordpress blog with mysql db.
+```bash
+# wordpress and mysql deployment example from kubernetes.io
+kubectl get pv                 
+NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                    STORAGECLASS   REASON   AGE
+pvc-700330df-2f37-434f-a182-030564766cd3   20Gi       RWO            Delete           Bound    default/wp-pv-claim      standard                19s
+pvc-8549348c-6eb7-4967-b42c-90a9ca2f6c80   20Gi       RWO            Delete           Bound    default/mysql-pv-claim   standard                26s
+
+# wordpress and mysql deployment example from kubernetes.io
+kubectl get pvc
+NAME             STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+mysql-pv-claim   Bound    pvc-8549348c-6eb7-4967-b42c-90a9ca2f6c80   20Gi       RWO            standard       37s
+wp-pv-claim      Bound    pvc-700330df-2f37-434f-a182-030564766cd3   20Gi       RWO            standard       30s
+```
+And the usual quite verbose details with `describe`
+```bash
+kubectl describe pv                       
+Name:            pvc-700330df-2f37-434f-a182-030564766cd3
+Labels:          <none>
+Annotations:     hostPathProvisionerIdentity: 9c34acd5-516a-11ea-a662-080027ede266
+                 pv.kubernetes.io/provisioned-by: k8s.io/minikube-hostpath
+Finalizers:      [kubernetes.io/pv-protection]
+StorageClass:    standard
+
+
+kubectl describe pvc
+Name:          mysql-pv-claim
+Namespace:     default
+StorageClass:  standard
+Status:        Bound
+Volume:        pvc-8549348c-6eb7-4967-b42c-90a9ca2f6c80
+Labels:        app=wordpress
+```

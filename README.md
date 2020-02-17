@@ -12,3 +12,4 @@ Covers:
 * namespaces
 * kustomize
 * imperative vs declarative kubectl
+* Persistent Storage
