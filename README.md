@@ -13,3 +13,11 @@ Covers:
 * kustomize
 * imperative vs declarative kubectl
 * Persistent Storage
+
+## Administering Kubernetes
+* Updating your application
+* Understanding namespaces
+* Kubernetes dashboard
+* Managing Resources
+* Troubleshooting Pods and Nodes
+* Understanding kubeadm
