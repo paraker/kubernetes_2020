@@ -274,14 +274,6 @@ kubectl run nginx --image=nginx --namespace=<insert-namespace-name-here>
 kubectl get pods --namespace=<insert-namespace-name-here>
 ```
 
-You can permanently save the namespace for all subsequent kubectl commands in that context.
-
-```bash
-kubectl config set-context --current --namespace=<insert-namespace-name-here>
-# Validate it
-kubectl config view --minify | grep namespace:
-```
-
 # Imperative kubectl
 Shout instructions at your cluster basically
 
@@ -497,7 +489,7 @@ spec:
 ```
 
 # kubeconfig
-## location
+## kubeconfig location
 By default config is stored at `$HOME/.kube/config`.<br>
 If the `KUBECONFIG` environment variable does exist, kubectl uses that too, to merge the settings into one file.
 <br>
@@ -509,7 +501,7 @@ clusters:
 - cluster:
     certificate-authority-data: DATA+OMITTED
 ```
-## context
+## kubeconfig contexts
 A context element in a kubeconfig file is used to group access parameters under a convenient name.<br>
 Each context has three parameters: `cluster`, `namespace`, and `user`.<br>
 By default, the kubectl command-line tool uses parameters from the current context to communicate with the cluster.
@@ -529,7 +521,7 @@ CURRENT   NAME                CLUSTER         AUTHINFO         NAMESPACE
 kubectl config use-context docker-for desktop         
 Switched to context "docker-for-desktop".
 ```
-
+## kubeconfig users and passwords
 You can query the kubeconfig through a series of commands to get user information
 ```bash
 # get the password for the myuser user
@@ -541,6 +533,8 @@ kubectl config view -o jsonpath='{.users[].name}'
 # get a list of users
 kubectl config view -o jsonpath='{.users[*].name}'
 ```
+
+## kubeconfig namespaces
 You can set a particular `namespace` and or `user` for all future kubectl commands for a specific `context`
 ```bash
 # permanently save the namespace for all subsequent kubectl commands in that context.
