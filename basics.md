@@ -496,6 +496,61 @@ spec:
         name: nginx
 ```
 
+# kubeconfig
+## location
+By default config is stored at `$HOME/.kube/config`.<br>
+If the `KUBECONFIG` environment variable does exist, kubectl uses that too, to merge the settings into one file.
+<br>
+To show your current config, use the `kubectl config view` command.
+```bash
+kubectl config view
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: DATA+OMITTED
+```
+## context
+A context element in a kubeconfig file is used to group access parameters under a convenient name.<br>
+Each context has three parameters: `cluster`, `namespace`, and `user`.<br>
+By default, the kubectl command-line tool uses parameters from the current context to communicate with the cluster.
+
+```bash
+# display current context
+kubectl config current-context
+arn:aws:eks:us-east-1:150734287162:cluster/ncpgtsaassample-dev-eks-9d9cd8d8
+
+# display all available contexts
+kubectl config get-contexts                          # display list of contexts 
+CURRENT   NAME                CLUSTER         AUTHINFO         NAMESPACE
+*         docker-desktop      docker-desktop  docker-desktop
+          docker-for-desktop  docker-desktop  docker-desktop
+          
+ # set the default context to my-cluster-name
+kubectl config use-context docker-for desktop         
+Switched to context "docker-for-desktop".
+```
+
+You can query the kubeconfig through a series of commands to get user information
+```bash
+# get the password for the myuser user
+kubectl config view -o jsonpath='{.users[?(@.name == "myuser")].user.password}'
+
+# display the first user
+kubectl config view -o jsonpath='{.users[].name}'  
+
+# get a list of users
+kubectl config view -o jsonpath='{.users[*].name}'
+```
+You can set a particular `namespace` and or `user` for all future kubectl commands for a specific `context`
+```bash
+# permanently save the namespace for all subsequent kubectl commands in that context.
+kubectl config set-context --current --namespace=ggckad-s2
+
+# set a context utilizing a specific username and namespace.
+kubectl config set-context gce --user=cluster-admin --namespace=foo \
+  && kubectl config use-context gce
+```
+
 # All api resources
 If you want to see all available api resources you can get them with kubectl.<br>
 Simply issue the command `kubectl api-resource` and you get a big list of resources.<br>
