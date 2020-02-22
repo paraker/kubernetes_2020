@@ -4,10 +4,10 @@
 
 # kubernetes fundamentals
 ## install 
-[instructions for kubectl, minikube and autocompletion](https://github.com/paraker/kubernetes_2020/blob/master/install_local.md)
+[instructions for kubectl, minikube and autocompletion](https://github.com/paraker/kubernetes_2020/blob/master/fundamentals/install_local.md)
 
 ## basics
-[basics readme](https://github.com/paraker/kubernetes_2020/blob/master/basics.md)
+[basics readme](https://github.com/paraker/kubernetes_2020/blob/master/fundamentals/basics.md)
 
 Covers:
 * pods
@@ -20,6 +20,7 @@ Covers:
 * Update Applications (rolling updates)
 
 ## Administering Kubernetes
+[admin readme](https://github.com/paraker/kubernetes_2020/blob/master/fundamentals/admin.md)
 * Kubernetes dashboard
 * Managing Resources
 * Troubleshooting Pods and Nodes
