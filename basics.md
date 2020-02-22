@@ -646,3 +646,58 @@ Status:        Bound
 Volume:        pvc-8549348c-6eb7-4967-b42c-90a9ca2f6c80
 Labels:        app=wordpress
 ```
+
+## Application updates
+You can utilise kubernetes deployments to incrementally update pods with no downtime.<br>
+### Apply an update
+You can issue an update to an image across a deployment with a simple imperative command.<br>
+Say for example that we wanted to move to nginx version 1.9.1 for a deployment.
+```
+  # Set a deployment's nginx container image to 'nginx:1.9.1', and its busybox container image to 'busybox'.
+  kubectl set image deployment/nginx busybox=busybox nginx=nginx:1.9.1
+```
+
+### monitor your rollout
+use `kubectl rollout status deploy/wordpress`
+
+```buildoutcfg
+# Unsuccessful rollout - this one has an image error in it
+use `kubectl rollout status deploy/wordpress`
+Waiting for deployment "wordpress" rollout to finish: 0 of 1 updated replicas are available...
+```
+
+```buildoutcfg
+# Successful rollout
+kubectl rollout status deployment/redis-master
+deployment "redis-master" successfully rolled out
+```
+
+### Rollback if something went wrong
+What if we during the update spelled the image wrong? We get loads of `ErrImagePull` in our `kubectl get pods` and all goes south.<br>
+Well, rolling back an update is as easy as one command in the imperative world.<br>
+```bash
+kubectl rollout undo deployment/nginx
+deployment/nginx rolled back
+```
+This will cause the containers to be recreated to the last configuration.<br>
+`ContainerCreating` will be shown in `kubectl get pods`.
+
+
+### Displaying history of rollouts
+You can display the history of rollouts by using the `kubectl rollout history deploy` command.
+```
+kubectl rollout history deploy
+deployment.apps/redis-master 
+REVISION  CHANGE-CAUSE
+1         <none>
+
+deployment.apps/web1 
+REVISION  CHANGE-CAUSE
+1         <none>
+
+deployment.apps/wordpress 
+REVISION  CHANGE-CAUSE
+1         <none>
+3         <none>
+4         <none>
+```
