@@ -142,6 +142,7 @@ minikube   559m         27%    1423Mi          77%
 
 ## monitor pod resource usage
 Use the `kubectl top pod` command to see resource usage on the top pods.<br>
+Note how these values do not seem to be instant on minikube! Quite a bit of delay in the output.<br>
 Note how these values are for individual pods.
 ```buildoutcfg
 kubectl top pods                               
@@ -152,7 +153,7 @@ nginx-resource-test             0m           2Mi
 
 # Troubleshooting pods
 ## pod conditions
-pending ()
+pending 
 running (actively executing)
 succeeeded (started and did what it was supposed to do)
 failed (one container in the pod failed)
@@ -164,4 +165,5 @@ running
 terminated
 
 ## troubleshooting commands
-`kubectl describe <pod>`
+`kubectl describe <pod>` is really the go-to command.<br>
+The events section is the most helpful section to give you an idea of where to continue.
