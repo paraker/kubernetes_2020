@@ -16,8 +16,6 @@ Covers:
 * Update Applications (rolling updates)
 
 ## Administering Kubernetes
-* Updating your application
-* Understanding namespaces
 * Kubernetes dashboard
 * Managing Resources
 * Troubleshooting Pods and Nodes
