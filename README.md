@@ -13,6 +13,7 @@ Covers:
 * kustomize
 * imperative vs declarative kubectl
 * Persistent Storage
+* Update Applications (rolling updates)
 
 ## Administering Kubernetes
 * Updating your application
