@@ -3,22 +3,19 @@
 ### Cloud server installation
 [installation instructions](https://github.com/paraker/kubernetes_2020/blob/master/ckad/install_cloud.md) 
 
-### Core concepts
-[core concepts readme](https://github.com/paraker/kubernetes_2020/blob/master/ckad/core_concepts.md)
+### [core concepts](https://github.com/paraker/kubernetes_2020/blob/master/ckad/core_concepts.md)
 * pods
 * namespaces
 * basic container config
 
-### configuration
-[configuration readme](https://github.com/paraker/kubernetes_2020/blob/master/ckad/configuration.md)
+### [configuration](https://github.com/paraker/kubernetes_2020/blob/master/ckad/configuration.md)
 * ConfigMaps
 * SecurityContexts
 * Resources requirements
 * Secrets
 * ServicesAccounts
 
-### mutli-container pods
-[multi-container pods readme](https://github.com/paraker/kubernetes_2020/blob/master/ckad/multi_container_pods.md)
+### [multi-container pods](https://github.com/paraker/kubernetes_2020/blob/master/ckad/multi_container_pods.md)
 
 ### [observability](https://github.com/paraker/kubernetes_2020/blob/master/ckad/observability.md)
 * Liveness and Readiness Probes
@@ -27,20 +24,17 @@
 * Monitoring Applications
 * Debugging 
 
-### pod design
-[pod design readme](https://github.com/paraker/kubernetes_2020/blob/master/ckad/pod_design.md)
+### [pod design](https://github.com/paraker/kubernetes_2020/blob/master/ckad/pod_design.md)
 * Labels, Selectors, and Annotations
 * Deployments
 * Rolling Updates and Rollbacks
 * Jobs and CronJobs 
 
-### services and netoworking
-[services and networking readme](https://github.com/paraker/kubernetes_2020/blob/master/ckad/services_and_networking.md)
+### [services and networking](https://github.com/paraker/kubernetes_2020/blob/master/ckad/services_and_networking.md)
 * services
 * NetworkPolicies
 
-### state persistence
-[state persistence readme](https://github.com/paraker/kubernetes_2020/blob/master/ckad/state_persistence.md)
+### [state persistence](https://github.com/paraker/kubernetes_2020/blob/master/ckad/state_persistence.md)
 * volumes
 * PeristentVolumes and PersistenVolumeClaims
 
