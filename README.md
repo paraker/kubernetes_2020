@@ -1,20 +1,20 @@
 # Certified Kubernetes Application Developer (CKAD)
 
-####[installation instructions](https://github.com/paraker/kubernetes_2020/blob/master/ckad/install_cloud.md) 
+[installation instructions](https://github.com/paraker/kubernetes_2020/blob/master/ckad/install_cloud.md) 
 
-####[core concepts](https://github.com/paraker/kubernetes_2020/blob/master/ckad/core_concepts.md)
+[core concepts](https://github.com/paraker/kubernetes_2020/blob/master/ckad/core_concepts.md)
 
-####[configuration](https://github.com/paraker/kubernetes_2020/blob/master/ckad/configuration.md)
+[configuration](https://github.com/paraker/kubernetes_2020/blob/master/ckad/configuration.md)
 
-####[multi-container pods](https://github.com/paraker/kubernetes_2020/blob/master/ckad/multi_container_pods.md)
+[multi-container pods](https://github.com/paraker/kubernetes_2020/blob/master/ckad/multi_container_pods.md)
 
-####[observability](https://github.com/paraker/kubernetes_2020/blob/master/ckad/observability.md)
+[observability](https://github.com/paraker/kubernetes_2020/blob/master/ckad/observability.md)
 
-####[pod design](https://github.com/paraker/kubernetes_2020/blob/master/ckad/pod_design.md)
+[pod design](https://github.com/paraker/kubernetes_2020/blob/master/ckad/pod_design.md)
 
-####[services and networking](https://github.com/paraker/kubernetes_2020/blob/master/ckad/services_and_networking.md)
+[services and networking](https://github.com/paraker/kubernetes_2020/blob/master/ckad/services_and_networking.md)
 
-####[state persistence](https://github.com/paraker/kubernetes_2020/blob/master/ckad/state_persistence.md)
+[state persistence](https://github.com/paraker/kubernetes_2020/blob/master/ckad/state_persistence.md)
 
 # kubernetes fundamentals
 ## install 
