@@ -176,4 +176,24 @@ spec:
         limits:  # maximum resources used by the container, if more is used, probably kill it.
           memory: "128Mi"  # 128 Mebibytes
           cpu: "500m"  # 500 milliCPUs, 0.5 CPU cores
+
+# verification through describe
+kubectl describe my-resource-pod
+---
+    Limits:
+      cpu:     500m
+      memory:  128Mi
+    Requests:
+      cpu:        250m
+      memory:     64Mi
+
+```
+
+# generating yaml files
+A quick and easy way to generate a formatted yaml file for you is through `kubectl run`.<br>
+
+```
+# generate a deployment yaml file, ready to be edited by you
+kubectl run my-sample-deploy --image busybox --dry-run -o yaml > my-sample-deploy.yaml
+# note how certain field are left empty with {}. This does not mean they're maps, it just means they're empty, afaik.
 ```
