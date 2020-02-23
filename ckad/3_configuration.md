@@ -1,19 +1,19 @@
-# ConfigMaps
-A `ConfigMap` is a kubernetes `Object (API primitive)` that stores configuration data in a key-value format.<br>
-This key-value config can be used to configure software running in a container, by referencing the `ConfigMap` in the `Pod spec`.<br>
+# configMaps
+A `configMap` is a kubernetes `Object (API primitive)` that stores configuration data in a key-value format.<br>
+This key-value config can be used to configure software running in a container, by referencing the `configMap` in the `Pod spec`.<br>
 
-## create ConfigMap
+## create configMap
 ```yaml
 apiVersion: v1  # mandatory api version
-kind: ConfigMap  # specify object to be a ConfigMap
+kind: configMap  # specify object to be a configMap
 metadata:  # mandatory metadata
   name: my-config-map  # name to reference in pods!
-data:  # mandatory data block for ConfigMap
+data:  # mandatory data block for configMap
   myKey: myValue  # key-value data
   anotherKey: anotherValue  # key-value data
 ```
 
-List and verify your `ConfigMap` 
+List and verify your `configMap` 
 ```
 # Get your configmap
 kubectl get configmaps my-config-map
@@ -38,11 +38,11 @@ myValue
 Events:  <none>
 ```
 
-## reference ConfigMap
-references to ConfigMaps can be done in multiple ways.
+## reference configMap
+references to configMaps can be done in multiple ways.
 
 ### mount as environment variable
-Our first option is to mount the ConfigMap as environment variables to our containers.<br>
+Our first option is to mount the configMap as environment variables to our containers.<br>
 This is done with the following type of yaml.
 ```yaml
 # container spec with environment variable loaded from configmap
@@ -69,7 +69,7 @@ MY_VAR=myValue
 ```
 
 ### mount as volume
-We can also mount ConfigMaps through container volumes, such that the configmap is like any other file that exists in that container.<br>
+We can also mount configMaps through container volumes, such that the configMap is like any other file that exists in that container.<br>
 ```yaml
 spec:
   containers:
@@ -82,7 +82,7 @@ spec:
   volumes:  # fields for volume mounts
     - name: config-volume  # name the volume appropriately, this is for a configmap so we call it config-volume
       configMap:  # instruct k8s that we want to use configmap data in our volume
-        name: my-config-map  # reference the name of the ConfigMap that we want to use
+        name: my-config-map  # reference the name of the configMap that we want to use
 
 # verify output from sh -c echo $(cat /etc/config/*)
 kubectl logs -f my-configmap-volume-pod
@@ -97,3 +97,31 @@ kubectl exec --stdin --tty my-configmap-volume-pod -- cat /etc/config/anotherKey
 anotherValue
 ```
 
+# SecurityContexts for Pods
+a `securityContext` for a `Pod` defines its privilege and access control settings.<br>
+If a pod requires special OS-level permissions, we can provide them via a `securityContext`.
+
+In our example, we will have a file that is only readable by a particular user/group.<br>
+This user/group has been created _on the workernodes_!
+
+```yaml
+# securityContext yaml file for a pod.
+spec:
+  securityContext:  # fields for securityContext
+    runAsUser: 2000  # run as this user id (defined by worker nodes OS!)
+    fsGroup: 3000  # run as this group (defined by worker nodes OS!)
+  containers:  # fields for containers
+    - name: myapp-container
+      image: busybox  # just a normal busybox container
+      command: ['sh', '-c', "cat /message/message.txt && sleep 3600"]  # sh -c cat /message/message.txt && sleep 3600
+
+#This should be done on your worker nodes
+#sudo useradd -u 2000 container-user-0
+#sudo groupadd -g 3000 container-group-0
+#sudo useradd -u 2001 container-user-1
+#sudo groupadd -g 3001 container-group-1
+#sudo mkdir -p /etc/message/
+#echo "Hello, World!" | sudo tee -a /etc/message/message.txt
+#sudo chown 2000:3000 /etc/message/message.txt
+#sudo chmod 640 /etc/message/message.txt
+```
