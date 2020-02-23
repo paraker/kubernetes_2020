@@ -10,6 +10,7 @@ kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/mast
 
 # my-arg-pod
 kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/pods/my-arg-pod.yaml
+kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/pods/my-arg2-pod.yaml
 
 # my-port-pod
 kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/pods/my-port-pod.yaml

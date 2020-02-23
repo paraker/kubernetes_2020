@@ -214,6 +214,19 @@ kubectl logs my-arg-pod
 This is my custom argument
 ```
 
+Another way of adding `arguments` and `command` is with this yaml syntax.<br>
+This is how it will be generated for you if you get the yaml from a running pod with `kubectl get pod <name> -o yaml`
+```
+spec:
+  containers:
+  - args:
+    - -g
+    - daemon off;
+    - -q
+    command:
+    - nginx
+```
+
 ## containerPorts
 You can expose containers to other pods, other clusters or the world.<br>
 Simplest method of doing so is the containerPort option in your `spec`.
