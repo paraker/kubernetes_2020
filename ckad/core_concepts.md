@@ -215,3 +215,13 @@ This is my custom argument
 ```
 
 ## containerPorts
+You can expose containers to other pods, other clusters or the world.<br>
+Simplest method of doing so is the containerPort option in your `spec`.
+```
+spec:
+  containers:
+  - name: myapp-container
+    image: nginx  # has a built in always-run command
+    ports:  # utilised to expose this container
+      - containerPort: 80  # export port 80 to things outside this pod
+```

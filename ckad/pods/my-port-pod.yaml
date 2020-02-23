@@ -7,6 +7,6 @@ metadata:
 spec:
   containers:
   - name: myapp-container
-    image: nginx
-    ports:
-      - containerPort: 80
+    image: nginx  # has a built in always-run command
+    ports:  # utilised to expose this container
+      - containerPort: 80  # export port 80 to things outside this pod
