@@ -91,7 +91,11 @@ Forbidden: pod updates may not change fields other than `spec.containers[*].imag
 ## delete pods
 You can delete a pod like this. This is required with some field edits in the pods.
 ```
+# delete with default graceperiod for shutdown
 kubectl delete pod my-pod
+
+# --now = resources are signaled for immediate shutdown (same as --grace-period=1)
+kubectl delete pod my-pod --now
 ```
 
 # namespaces

@@ -130,4 +130,27 @@ spec:
 #echo "Hello, World!" | sudo tee -a /etc/message/message.txt
 #sudo chown 2000:3000 /etc/message/message.txt
 #sudo chmod 640 /etc/message/message.txt
+
+# verification that we use user "2000"
+k exec my-securitycontext-pod -- ps
+PID   USER     TIME  COMMAND
+    1 2000      0:00 sleep 3600
+    7 2000      0:00 ps
+
+# verification that we could look at the file
+cloud_user@par1c:~/ckad$ k logs my-securitycontext-pod 
+Hello, World!
+```
+
+If we reconfigure the `pod spec` ot use `runAsUser: 2001` and `fsGroup: 3001` we can confirm that the approach works.<br>
+It crashes because it can't read the file.
+```
+# test of a container running as user 2001 and group 3001
+k logs my-securitycontext-pod 
+cat: can't open '/message/message.txt': Permission denied
+
+# pod gets stuck on CrashLoopBackOff
+k get pods
+NAME                      READY   STATUS             RESTARTS   AGE
+my-securitycontext-pod    0/1     CrashLoopBackOff   1          26s
 ```
