@@ -14,4 +14,3 @@ spec:
       - -g
       - daemon off;
       - -q
-  restartPolicy: Never  # do not attempt to restart the container when command is finished

@@ -204,14 +204,9 @@ To do this, add an `args: []` field to your `container spec`
 spec:
   containers:
   - name: myapp-container
-    image: busybox
-    command: ['echo']  # run a simple echo command when container is fired up. This will output nothing
-    args: ['This is my custom argument']  # The arguments passed into the command
-  restartPolicy: Never  # do not attempt to restart the container when command is finished
-
-# verification
-kubectl logs my-arg-pod 
-This is my custom argument
+    image: nginx
+    command: ['nginx']  # run the command 'nginx' when container is fired up.
+    args: ['-g', 'daemon off;', '-q'] # the arguments passed into the command. This will silent the nginx logs
 ```
 
 Another way of adding `arguments` and `command` is with this yaml syntax.<br>

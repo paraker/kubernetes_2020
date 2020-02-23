@@ -8,6 +8,5 @@ spec:
   containers:
   - name: myapp-container
     image: nginx
-    command: ['nginx']  # run a simple echo command when container is fired up. This will output nothing
-    args: ['-g', 'daemon off;', '-q'] # the arguments passed into the command. This will silent the nginx logs
-  restartPolicy: Never  # do not attempt to restart the container when command is finished
+    command: ['nginx']  # run the 'nginx' command when container is started.
+    args: ['-g', 'daemon off;', '-q'] # the arguments (-g daemon off; -q) passed into the command. This will silent the nginx logs
