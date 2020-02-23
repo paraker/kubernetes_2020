@@ -1,7 +1,7 @@
 apiVersion: v1  # api version to use with kubernetes
 kind: Pod  # type of api primitive (object)
 metadata:
-  namespace: my-ns
+  namespace: default
   name: my-pod  # name given to our object
   labels:
     app: myapp-1  # not mandatory by good for filtering later
