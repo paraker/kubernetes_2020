@@ -175,7 +175,7 @@ namespace "my-ns" deleted
 Some frequently-used container configuration options that you may edit are: `command`, `args`, and `containerPort`.<br>
 
 ## command
-command will modify the container CMD. This is great if your container doesn't have a CMD to start with, or if you want to modify the existing value.<br>
+command will override the container CMD. This is great if your container doesn't have a CMD to start with, or if you want to override the existing value.<br>
 In the `spec` section of the yaml, add a `command` field the `container` field.
 
 ```
@@ -184,7 +184,7 @@ spec:
   containers:
   - name: myapp-container
     image: busybox
-    command: ['echo hello']  # run a simple echo command when container is fired up
+    command: ['echo']  # run a simple echo command when container is fired up
   restartPolicy: Never  # do not attempt to restart the container when command is finished
 
 # verify run. Should say "Completed"
