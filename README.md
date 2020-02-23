@@ -1,6 +1,6 @@
 # Certified Kubernetes Application Developer (CKAD)
 ## install test cluster
-[installation instructions]() 
+[installation instructions](https://github.com/paraker/kubernetes_2020/blob/master/ckad/install_cloud.md) 
 
 # kubernetes fundamentals
 ## install 
