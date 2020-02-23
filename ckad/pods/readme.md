@@ -15,4 +15,7 @@ kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/mast
 # my-port-pod
 kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/pods/my-port-pod.yaml
 
+# my-configmap-pod
+kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/pods/my-configmap-pod.yaml
+
 ```
