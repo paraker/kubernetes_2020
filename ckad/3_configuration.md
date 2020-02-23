@@ -4,11 +4,11 @@ This key-value config can be used to configure software running in a container, 
 
 ## create ConfigMap
 ```yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: my-config-map
-data:
-  myKey: myValue
-  anotherKey: anotherValue
+apiVersion: v1  # mandatory api version
+kind: ConfigMap  # specify object to be a ConfigMap
+metadata:  # mandatory metadata
+  name: my-config-map  # name to reference in pods!
+data:  # mandatory data block for ConfigMap
+  myKey: myValue  # key-value data
+  anotherKey: anotherValue  # key-value data
 ```

@@ -1,7 +1,7 @@
 apiVersion: v1  # mandatory api version
 kind: ConfigMap  # specify object to be a ConfigMap
 metadata:  # mandatory metadata
-  name: my-config-map  # just set a name
+  name: my-config-map  # name to reference in pods!
 data:  # mandatory data block for ConfigMap
   myKey: myValue  # key-value data
   anotherKey: anotherValue  # key-value data
