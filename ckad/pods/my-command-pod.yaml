@@ -8,5 +8,5 @@ spec:
   containers:
   - name: myapp-container
     image: busybox
-    command: ['echo']  # run a simple echo command when container is fired up
+    command: ['echo hello']  # run a simple echo command when container is fired up
   restartPolicy: Never  # do not attempt to restart the container when command is finished

@@ -179,10 +179,18 @@ command will modify the container CMD. This is great if your container doesn't h
 In the `spec` section of the yaml, add a `command` field the `container` field.
 
 ```
+# add 
 spec:
   containers:
   - name: myapp-container
     image: busybox
-    command: ['echo']
-  restartPolicy: Never
+    command: ['echo hello']  # run a simple echo command when container is fired up
+  restartPolicy: Never  # do not attempt to restart the container when command is finished
+
+# verify run. Should say "Completed"
+kubectl get pods
+NAME             READY   STATUS      RESTARTS   AGE
+my-command-pod   0/1     Completed   0          6s
+
 ```
+
