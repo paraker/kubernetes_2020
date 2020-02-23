@@ -20,8 +20,7 @@
 ### mutli-container pods
 [multi-container pods readme](https://github.com/paraker/kubernetes_2020/blob/master/ckad/multi_container_pods.md)
 
-### observability
-[observability readme](https://github.com/paraker/kubernetes_2020/blob/master/ckad/observability.md)
+### [observability](https://github.com/paraker/kubernetes_2020/blob/master/ckad/observability.md)
 * Liveness and Readiness Probes
 * Container Logging
 * Installing Metrics Server
