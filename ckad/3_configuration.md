@@ -160,4 +160,20 @@ kubernetes allows us to specify `resource requirements` in the `pod spec`.<br>
 A container's memory and cpu requirements are defined in terms of `resource requests` and `limits`.<br>
 
 **resource request** - the amount of resources necessary to run a container. A pod will only be able to run a container if it has enough spare resources for the resource request.<br>
-**resouce limit** - a maximum value for the resource usage of a container. If the container uses more than this, it's likely killed by kubernetes.
+**resource limit** - a maximum value for the resource usage of a container. If the container uses more than this, it's likely killed by kubernetes.
+
+```yaml
+# pod spec with resource requests and limits
+spec:
+  containers:
+    - name: myapp-container
+      image: busybox
+      command: ['sh', '-c', 'echo Hello kubernetes! && sleep 3600']
+      resources:  # fields for resources
+        requests:  # minimum required resources for worker node to take on the pod
+          memory: "64Mi" # 64 Mebibytes (mega + binary = mebi)
+          cpu: "250m"  # 250 milliCPUs, i.e. 0.25 CPU cores
+        limits:  # maximum resources used by the container, if more is used, probably kill it.
+          memory: "128Mi"  # 128 Mebibytes
+          cpu: "500m"  # 500 milliCPUs, 0.5 CPU cores
+```
