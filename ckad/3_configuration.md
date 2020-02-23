@@ -154,3 +154,10 @@ k get pods
 NAME                      READY   STATUS             RESTARTS   AGE
 my-securitycontext-pod    0/1     CrashLoopBackOff   1          26s
 ```
+
+# resource requirements
+kubernetes allows us to specify `resource requirements` in the `pod spec`.<br>
+A container's memory and cpu requirements are defined in terms of `resource requests` and `limits`.<br>
+
+**resource request** - the amount of resources necessary to run a container. A pod will only be able to run a container if it has enough spare resources for the resource request.<br>
+**resouce limit** - a maximum value for the resource usage of a container. If the container uses more than this, it's likely killed by kubernetes.
