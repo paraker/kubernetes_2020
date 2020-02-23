@@ -64,8 +64,23 @@ myValue
 
 # verification by getting a shell and look for the variable
 kubectl exec --stdin --tty my-configmap-pod sh
-/ # env | grep -i var
+/# env | grep -i var
 MY_VAR=myValue
 ```
 
 ### mount as volume
+We can also mount ConfigMaps through container volumes, such that the configmap is like any other file that exists in that container.<br>
+```yaml
+spec:
+  containers:
+  - name: myapp-container
+    image: busybox
+    command: ['sh', '-c', "echo $(cat /etc/config/myKey) && sleep 3600"]  # sh -c echo $(cat /etc/config/myKey) && sleep 3600
+    volumeMounts:  # fields for mounting a volume to this container
+      - name: config-volume  # specify the volume name that you want to mount to the container
+        mountPath: /etc/config  # specify the path to where the volume will be mounted
+  volumes:  # fields for volume mounts
+    - name: config-volume  # name the volume appropriately, this is for a configmap so we call it config-volume
+      configMap:  # instruct k8s that we want to use configmap data in our volume
+        name: my-config-map  # reference the name of the ConfigMap that we want to use
+```

@@ -10,6 +10,6 @@ spec:
     env:  # specify environment variables
     - name: MY_VAR  # create a name of the environment variable
       valueFrom:  # grab the value from an external source,
-        configMapKeyRef:  # refer to a our config map called my-config-map
+        configMapKeyRef:  # refer to a a config map
           name: my-config-map  # specifying the config map's name
           key: myKey  # specify the key-value we want to set for our variable
