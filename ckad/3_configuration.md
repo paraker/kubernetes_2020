@@ -45,6 +45,7 @@ references to ConfigMaps can be done in multiple ways.
 Our first option is to mount the ConfigMap as environment variables to our containers.<br>
 This is done with the following type of yaml.
 ```yaml
+# container spec with environment variable loaded from configmap
 spec:
   containers:
   - name: myapp-container
@@ -56,4 +57,15 @@ spec:
         configMapKeyRef:  # refer to a our config map called my-config-map
           name: my-config-map  # specifying the config map's name
           key: myKey  # specify the key-value we want to set for our variable
+
+# verification of enviromnent variable (sh -c echo $(MY_VAR) && sleep 3600)
+kubectl logs my-configmap-pod 
+myValue
+
+# verification by getting a shell and look for the variable
+kubectl exec --stdin --tty my-configmap-pod sh
+/ # env | grep -i var
+MY_VAR=myValue
 ```
+
+### mount as volume
