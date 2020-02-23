@@ -170,3 +170,19 @@ Delete your namespace with `kubectl delete ns my-ns`.<br>
 k delete ns my-ns
 namespace "my-ns" deleted
 ```
+
+# basic container spec configs
+Some frequently-used container configuration options that you may edit are: `command`, `args`, and `containerPort`.<br>
+
+## command
+command will modify the container CMD. This is great if your container doesn't have a CMD to start with, or if you want to modify the existing value.<br>
+In the `spec` section of the yaml, add a `command` field the `container` field.
+
+```
+spec:
+  containers:
+  - name: myapp-container
+    image: busybox
+    command: ['echo']
+  restartPolicy: Never
+```
