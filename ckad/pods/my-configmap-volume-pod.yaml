@@ -6,7 +6,7 @@ spec:
   containers:
   - name: myapp-container
     image: busybox
-    command: ['sh', '-c', "echo $(cat /etc/config/myKey) && sleep 3600"]  # sh -c echo $(cat /etc/config/myKey) && sleep 3600
+    command: ['sh', '-c', "echo $(cat /etc/config/*) && sleep 3600"]  # sh -c echo $(cat /etc/config/*) && sleep 3600
     volumeMounts:  # fields for mounting a volume to this container
       - name: config-volume  # specify the volume name that you want to mount to the container
         mountPath: /etc/config  # specify the path to where the volume will be mounted

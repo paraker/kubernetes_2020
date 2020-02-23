@@ -75,7 +75,7 @@ spec:
   containers:
   - name: myapp-container
     image: busybox
-    command: ['sh', '-c', "echo $(cat /etc/config/myKey) && sleep 3600"]  # sh -c echo $(cat /etc/config/myKey) && sleep 3600
+    command: ['sh', '-c', "echo $(cat /etc/config/*) && sleep 3600"]  # sh -c echo $(cat /etc/config/*) && sleep 3600
     volumeMounts:  # fields for mounting a volume to this container
       - name: config-volume  # specify the volume name that you want to mount to the container
         mountPath: /etc/config  # specify the path to where the volume will be mounted
@@ -83,4 +83,17 @@ spec:
     - name: config-volume  # name the volume appropriately, this is for a configmap so we call it config-volume
       configMap:  # instruct k8s that we want to use configmap data in our volume
         name: my-config-map  # reference the name of the ConfigMap that we want to use
+
+# verify output from sh -c echo $(cat /etc/config/*)
+kubectl logs -f my-configmap-volume-pod
+anotherValuemyValue
+
+# verify mounting and availability of the volume
+kubectl exec --stdin --tty my-configmap-volume-pod -- ls /etc/config
+anotherKey  myKey
+
+# verify value of file in configmap volume
+kubectl exec --stdin --tty my-configmap-volume-pod -- cat /etc/config/anotherKey
+anotherValue
 ```
+
