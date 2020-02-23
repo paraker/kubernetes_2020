@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: my-command-pod
+  name: my-arg-pod
   labels:
     app: myapp
 spec:
