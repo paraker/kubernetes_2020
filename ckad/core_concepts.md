@@ -70,8 +70,7 @@ hello kubernetes
 
 ## edit pods
 Edit a pod by updating the yaml definition and re-applying it, this time with `apply`.<br>
-*Note* how it will complain about editing the file the first time. You can ignore this.<br>
-*Note* you can't edit all values on a running pod. Some edits require deletion and recreation of the pod.<br>
+**Note** how it will complain about editing the file the first time. You can ignore this.<br>
 ```
 kubectl apply -f my-pod.yml
 Warning: kubectl apply should be used on resource created by either kubectl create --save-config or kubectl apply
@@ -79,12 +78,15 @@ Warning: kubectl apply should be used on resource created by either kubectl crea
 You can also edit a pod with an interactive fast command `kubectl edit pod <pod name>.`<br>
 Changes here will be applied immediately so there's no need to run an `apply` again.<br>
 Same deal, you can't edit all fields in a running container!<br>
-Examples of things you can't change interactively:
-* namespace
 ```
 # interactive edits
 kubectl edit pod my-pod
 ```
+
+### restricted edits
+**Note** you can't edit all values on a running pod. Some edits require deletion and recreation of the pod.<br>
+Forbidden: pod updates may not change fields other than `spec.containers[*].image`, `spec.initContainers[*].image`, `spec.activeDeadlineSeconds` or `spec.tolerations` (only additions to existing tolerations)
+
 
 ## delete pods
 You can delete a pod like this. This is required with some field edits in the pods.
@@ -194,3 +196,22 @@ my-command-pod   0/1     Completed   0          6s
 
 ```
 
+## arguments to a command
+The CMD specified for your container can have arguments passed into it.<br>
+To do this, add an `args: []` field to your `container spec`
+```
+# spec with command and arguments
+spec:
+  containers:
+  - name: myapp-container
+    image: busybox
+    command: ['echo']  # run a simple echo command when container is fired up. This will output nothing
+    args: ['This is my custom argument']  # The arguments passed into the command
+  restartPolicy: Never  # do not attempt to restart the container when command is finished
+
+# verification
+kubectl logs my-arg-pod 
+This is my custom argument
+```
+
+## containerPorts

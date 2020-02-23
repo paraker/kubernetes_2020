@@ -9,5 +9,5 @@ spec:
   - name: myapp-container
     image: busybox
     command: ['echo']  # run a simple echo command when container is fired up. This will output nothing
-    args: ['This is my custom argument']
+    args: ['This is my custom argument']  # the arguments passed into the command
   restartPolicy: Never  # do not attempt to restart the container when command is finished
