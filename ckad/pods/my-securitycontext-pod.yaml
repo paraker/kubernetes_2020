@@ -10,6 +10,13 @@ spec:
     - name: myapp-container
       image: busybox  # just a normal busybox container
       command: ['sh', '-c', "cat /message/message.txt && sleep 3600"]  # sh -c cat /message/message.txt && sleep 3600
+      VolumeMounts:  # fields for mounting volumes to container
+        - name: message-volume  # name of the volume we are mounting
+          mountPath: /message  # mounts to /message on the container
+  volumes:  # fields for volumes
+    - name: message-volume  # mountable name for volume
+      hostPath:  # specifies that it's on the worker node (Host)
+        path: /etc/message  # path on the worker node
 
 #This should be done on your worker nodes
 #sudo useradd -u 2000 container-user-0

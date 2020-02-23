@@ -19,4 +19,6 @@ kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/mast
 kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/pods/my-configmap-pod.yaml
 kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/pods/my-configmap-volume-pod.yaml
 
+# my-security-context-pod
+kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/pods/my-securitycontext-pod.yaml
 ```
