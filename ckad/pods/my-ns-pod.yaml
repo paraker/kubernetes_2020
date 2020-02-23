@@ -1,0 +1,12 @@
+apiVersion: v1  # api version to use with kubernetes
+kind: Pod  # type of api primitive (object)
+metadata:
+  namespace: my-ns
+  name: my-ns-pod  # name given to our object
+  labels:
+    app: myapp-1  # not mandatory by good for filtering later
+spec:  # we provide the spec to kubernetes!
+  containers:
+    - name: myapp-container
+      image: busybox  # The container we will run
+      command: ['sh', '-c', 'echo hello kubernetes && sleep 3600']  # no built in command for busybox, supply one
