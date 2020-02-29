@@ -100,11 +100,29 @@ anotherValue
 # secrets
 A Secret is an object that contains a small amount of sensitive data such as a password, a token, or a key.<br>
 Such information might otherwise be put in a Pod specification or in an image.<br>
-Users can create secrets and the system also creates some built-in secrets.
+Users can create secrets and the system also creates some built-in secrets.<br>
 
 To use a secret, a Pod needs to reference the secret. A secret can be used with a Pod in two ways:
 * As files in a volume mounted on one or more of its containers.
 * By the kubelet when pulling images for the Pod
+
+## create a secret manually from yaml
+You can use the normal `yaml` file syntax to create secrets.<br>
+There are two ways to include the sensitive data in these files; base64 encoded (`data`) or as normal strings (`stringData`).<br>
+
+```yaml
+# Sample stringData secret
+apiVersion: v1  # mandatory api version
+kind: Secret  # Object to store sensitive data
+metadata:  # mandatory metadata block
+  name: my-stringdata-secret # name to be referenced in pods/deployments!
+stringData:  # write-only convenience block to not have to deal with base64 encoding
+  myKey: myPassword  # configure a key-value pair as a simple string
+```
+
+Generally after the secret has been created in kubernetes, you should/can delete the yaml file that includes the sensitive information.<br>
+
+## using secret from a pod spec
 
 # SecurityContexts for Pods
 a `securityContext` for a `Pod` defines its privilege and access control settings.<br>
