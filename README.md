@@ -50,6 +50,7 @@ Covers:
 * services
 * Controllers (ReplicaSets, daemonsets, statefulsets, deployments)
 * namespaces
+* deployments
 * kustomize
 * imperative vs declarative kubectl
 * Persistent Storage
