@@ -24,4 +24,8 @@ kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/mast
 
 # my-resource-pod
 kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/pods/my-resource-pod.yaml
+
+# my-secret-pod
+kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/pods/my-secret-pod.yaml
+
 ```
