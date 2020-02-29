@@ -97,6 +97,15 @@ kubectl exec --stdin --tty my-configmap-volume-pod -- cat /etc/config/anotherKey
 anotherValue
 ```
 
+# secrets
+A Secret is an object that contains a small amount of sensitive data such as a password, a token, or a key.<br>
+Such information might otherwise be put in a Pod specification or in an image.<br>
+Users can create secrets and the system also creates some built-in secrets.
+
+To use a secret, a Pod needs to reference the secret. A secret can be used with a Pod in two ways:
+* As files in a volume mounted on one or more of its containers.
+* By the kubelet when pulling images for the Pod
+
 # SecurityContexts for Pods
 a `securityContext` for a `Pod` defines its privilege and access control settings.<br>
 If a pod requires special OS-level permissions, we can provide them via a `securityContext`.
