@@ -44,4 +44,6 @@ kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/mast
 # my-readiness-probe-pod
 kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/pods/my-readiness-probe-pod.yaml
 
+# my-logging-pod
+kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/pods/my-logging-pod.yaml
 ```

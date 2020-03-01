@@ -157,3 +157,22 @@ spec:
     args: [/bin/sh, -c, 'i=0; while true; do echo "$i: $(date)"; i=$((i+1)); sleep 1; done']  # generates a log entry every second
 ```
 
+## view logs
+Of course, just list your logs with `kubectl logs <pod name>`
+```
+kubectl logs counter
+0: Sun Mar  1 04:25:19 UTC 2020
+1: Sun Mar  1 04:25:20 UTC 2020
+2: Sun Mar  1 04:25:21 UTC 2020
+3: Sun Mar  1 04:25:22 UTC 2020
+```
+
+## logs in a multi-container environment
+Since you have multiple containers in the same pod, you must now specify which container to run `logs` commands on.<br>
+Do this with the `--container` or `-c` flag for short.
+
+```
+# just an example, we don't have multi-container pods now
+kubectl logs counter --container my-sidecar-counter /bin/sh
+# /
+```

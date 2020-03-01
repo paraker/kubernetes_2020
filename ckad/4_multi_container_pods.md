@@ -43,14 +43,19 @@ spec:  # mandatory spec
       image: nginx  # nginx container image
       ports:  # port exposure block
       - containerPort: 80  # expose port 80 through clusterIP, I think
-    - name: buxybox-sidecar  # second container, or 'sidecar'
+    - name: busybox-sidecar  # second container, or 'sidecar'
       image: busybox  # busybox image
       command: ['sh', '-c', 'echo hello kubernetes && sleep 3600']  # just a sleep for a while command
 ```
 
 ## exec in a multi-container environment
 Since you have multiple containers in the same pod, you must now specify which container to run `exec` commands on.<br>
-Do this with the `-c` flag.
+Do this with the `--container` or `-c` flag for short.
+
+```
+kubectl exec -it my-multicontainer-pod -c buxybox-sidecar /bin/sh
+# /
+```
 
 
 
