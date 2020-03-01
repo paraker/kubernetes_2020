@@ -218,11 +218,76 @@ spec:
           name: my-secret  # specifying the secret map's name
           key: myKey  # specify the key-value we want to set for our variable
 ```
+Verification
+```
 # verify secret as an environment variable
 kubectl exec -it my-secret-pod sh
 / # env | grep MY
 MY_PASSWORD=myPassword
 ```
+
+## use secret in a pod as volume
+We can mount the secret files as a volume.<br>
+This could be useful if you for some reason would like to have ssh keys on your pods as files.<br>
+This again is just like a configMap volume mount.
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-secret-volume-pod
+spec:
+  containers:
+  - name: myapp-container
+    image: busybox
+    command: ['sh', '-c', "echo Hello, Kubernetes && sleep 3600"]  # simple hello world and stay awake for 1 hour
+    volumeMounts:
+    - name: secret-volume
+      readOnly: true
+      mountPath: "/etc/secret-volume"
+  volumes:
+  - name: secret-volume
+    secret:
+      secretName: my-stringdata-secret
+```
+Verification
+```
+kubectl exec -it my-secret-volume-pod sh
+/ # cat /etc/secret-volume/myKey 
+myPassword
+```
+
+# serviceAccounts
+`ServiceAccounts` allow containers running in pods to access the kubernetes API.<br>
+Some apps will require to interact with the cluster itself, `ServiceAccounts` provide a way to do that securely, with properly limited permissions.<br>
+
+Compared to user account, serviceAccounts are different.
+* User accounts are for humans. Service accounts are for processes, which run in pods.
+* User accounts are intended to be global. Names must be unique across all namespaces of a cluster, future user resource will not be namespaced. Service accounts are namespaced.
+
+**NOTE** we will not set any specific permissions for the serviceAccounts here. That's not part of ckad.
+
+## create ServiceAccount with kubectl
+Create a `serviceAccount` by this simple command
+```
+kubectl create serviceaccount my-serviceaccount
+```
+
+## set ServiceAccount in a pod manifest
+Simply set a one-liner in the pod spec to use a particular `serviceAccount`
+```yaml
+# requires a 'kubectl create serviceaccount my-serviceaccount'
+apiVersion: v1  # mandatory api version
+kind: Pod  # mandatory kind
+metadata:  # mandatory metadata block
+  name: my-serviceaccount-pod  # Set name for our pod
+spec:  # mandatory spec block
+  serviceAccountName: my-serviceaccount  # reference to the service account in our cluster
+  containers:  # container spec block
+    - name: myapp-container  # mandatory name block
+      image: busybox  # simple container
+      command: ['sh', '-c', "echo Hello, Kubernetes! && sleep 3600"]  # basic run command
+```
+
 
 # SecurityContexts for Pods
 a `securityContext` for a `Pod` defines its privilege and access control settings.<br>
