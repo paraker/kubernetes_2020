@@ -18,11 +18,11 @@
 ### [multi-container pods](https://github.com/paraker/kubernetes_2020/blob/master/ckad/4_multi_container_pods.md)
 
 ### [observability](https://github.com/paraker/kubernetes_2020/blob/master/ckad/5_observability.md)
-* Liveness and Readiness Probes
+* Liveness, Readiness and startup Probes
 * Container Logging
 * Installing Metrics Server
-* Monitoring Applications
-* Debugging 
+* Monitoring Applications and usage
+* Debugging / troubleshooting
 
 ### [pod design](https://github.com/paraker/kubernetes_2020/blob/master/ckad/6_pod_design.md)
 * Labels, Selectors, and Annotations

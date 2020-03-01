@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-production-label-pod
+  labels:  # labels block
+    app: my-app  # label for "app"
+    environment: production  # label for "environment"
+spec:
+  containers:
+  - name: nginx
+    image: nginx

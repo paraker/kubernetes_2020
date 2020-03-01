@@ -176,3 +176,50 @@ Do this with the `--container` or `-c` flag for short.
 kubectl logs counter --container my-sidecar-counter /bin/sh
 # /
 ```
+
+# metrics server
+The kubernetes `metrics server` is an add-on installation on your cluster.<br>
+It provides an API which allows you to access additional data about pods and nodes.<br>
+For example CPU and memory data.<br>
+
+## installation
+Not necessary for ckad.<br>
+But this is how you install at least some version of it.<br>
+mine threw some error but seemed to still be installed. Probably because of version mismatch?<br>
+**NOTE** this is probably only for the linuxacademy playground system.<br>
+It's at least their source this time. Not the official.
+```
+cd ~/
+git clone https://github.com/linuxacademy/metrics-server
+kubectl apply -f ~/metrics-server/deploy/1.8+/
+
+clusterrole.rbac.authorization.k8s.io/system:aggregated-metrics-reader created
+clusterrolebinding.rbac.authorization.k8s.io/metrics-server:system:auth-delegator created
+rolebinding.rbac.authorization.k8s.io/metrics-server-auth-reader created
+apiservice.apiregistration.k8s.io/v1beta1.metrics.k8s.io created
+serviceaccount/metrics-server created
+service/metrics-server created
+clusterrole.rbac.authorization.k8s.io/system:metrics-server created
+clusterrolebinding.rbac.authorization.k8s.io/system:metrics-server created
+error: unable to recognize "/home/cloud_user/metrics-server/deploy/1.8+/metrics-server-deployment.yaml": no matches for kind "Deployment" in version "extensions/v1beta1"
+
+```
+
+And for verification:
+```
+kubectl get --raw /apis/metrics.k8s.io/
+
+{"kind":"APIGroup","apiVersion":"v1","name":"metrics.k8s.io","versions":[{"groupVersion":"metrics.k8s.io/v1beta1","version":"v1beta1"}],"preferredVersion":{"groupVersion":"metrics.k8s.io/v1beta1","version":"v1beta1"}}
+```
+
+## top
+gets statistics for pods and nodes.
+
+```
+kubectl top pods                       # get pod usage
+kubectl top pod resource-consumer-big  # get a specific pod 
+kubectl top pods -n kube-system        # get pods in a different name space
+kubectl top nodes                      # get node usage
+```
+
+# debugging
