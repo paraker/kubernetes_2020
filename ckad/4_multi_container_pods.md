@@ -21,7 +21,7 @@ Capturing and translating network traffic before it hits the main container.<br>
 So the ambassador can sit as an interceptor in the network before it hits the main container.<br>
 That could be for example like a port translator, like a poor man's load-balancer I suppose?
 
-
+see example at [proxy-pod](https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/pods/my-multicontainer-proxy-pod.yaml)
 
 ### adapter
 An adapter would sit between the main container and another system that requires output from the main container.<br>
