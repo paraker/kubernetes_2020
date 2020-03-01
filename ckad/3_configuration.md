@@ -150,6 +150,9 @@ Generally after the secret has been created in kubernetes, you should/can delete
 Do **NOT** check in files like this to version control, obviously.
 
 ## create a secret from a secret generator
+You can also use kustomize to generate a secret from files.<br>
+Perhaps this is good if you need to do it across a fleet of services or something?
+See [secretGenerator](https://github.com/paraker/kubernetes_2020/tree/master/ckad/kustomize/secretGenerator)
 
 ### view secrets
 You can use `get` and `describe` as usual to view your secrets.<br>
@@ -166,7 +169,6 @@ Type:  Opaque
 Data
 ====
 myKey:  10 bytes
-
 ```
 
 ### view base64 data of secrets
