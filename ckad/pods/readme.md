@@ -51,4 +51,7 @@ kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/mast
 kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/pods/my-label-prod-pod.yaml
 kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/pods/my-label-dev-pod.yaml
 
+# my-annotation-pod
+kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/pods/my-annotation-pod.yaml
+
 ```
