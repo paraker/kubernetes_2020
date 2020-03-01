@@ -31,4 +31,7 @@ kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/mast
 
 # my-serviceaccount-pod
 kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/pods/my-serviceaccount-pod.yaml
+
+# my-multicontainer-pod
+kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/pods/my-multicontainer-pod.yaml
 ```
