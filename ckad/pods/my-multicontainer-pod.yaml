@@ -10,4 +10,4 @@ spec:  # mandatory spec
       - containerPort: 80  # expose port 80 through clusterIP, I think
     - name: buxybox-sidecar  # second container, or 'sidecar'
       image: busybox  # busybox image
-      command: ['sh', '-c', 'while true: do sleep 30; done']  # just a sleep for a while command
+      command: ['sh', '-c', 'echo hello kubernetes && sleep 3600']  # just a sleep for a while command
