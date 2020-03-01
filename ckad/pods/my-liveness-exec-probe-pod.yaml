@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-liveness-exec-pod
+spec:
+  containers:
+  - name: myapp-container
+    image: busybox
+    command: ['sh', '-c', "echo Hello, Kubernetes! && sleep 3600"]
+    livenessProbe:  # probe block.
+      exec:  # command style probe
+        command:  # if return code is 0, commands succeed. Anything else is fail.
+        - echo  # just echo
+        - testing  # just a string
+      initialDelaySeconds: 5  # wait time before first probe
+      periodSeconds: 5  # interval between probes
