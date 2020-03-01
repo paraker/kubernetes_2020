@@ -46,4 +46,9 @@ kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/mast
 
 # my-logging-pod
 kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/pods/my-logging-pod.yaml
+
+# my-label-pod
+kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/pods/my-label-prod-pod.yaml
+kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/pods/my-label-dev-pod.yaml
+
 ```
