@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: fruit-service
+  name: fruit-service
+spec:
+  containers:
+  - image: linuxacademycontent/legacy-fruit-service:1
+    name: fruit-service
+    resources: {}
+  - image: haproxy:1.7  # Ambassador container to translate port 8775 to 80
+    name: haproxy-ambassador  # call it ambassador
+    ports:
+    - containerPort: 80  # expose port 80 to other pods and the world
+    volumeMounts:
+      - name: config-volume  # mount "config-volume"
+        mountPath: /usr/local/etc/haproxy  # mount here
+  volumes:
+    - name: config-volume  # for reference in pdos
+      configMap:  # use configured configMap
+        name: fruit-service-ambassador-config  # name of the configMap

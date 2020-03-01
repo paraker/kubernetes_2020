@@ -21,6 +21,8 @@ Capturing and translating network traffic before it hits the main container.<br>
 So the ambassador can sit as an interceptor in the network before it hits the main container.<br>
 That could be for example like a port translator, like a poor man's load-balancer I suppose?
 
+
+
 ### adapter
 An adapter would sit between the main container and another system that requires output from the main container.<br>
 For example if you have a log analyser that requires logs in a specific output format.<br>
@@ -45,3 +47,9 @@ spec:  # mandatory spec
       image: busybox  # busybox image
       command: ['sh', '-c', 'echo hello kubernetes && sleep 3600']  # just a sleep for a while command
 ```
+
+## links to real examples
+
+* https://kubernetes.io/docs/concepts/cluster-administration/logging/#using-a-sidecar-container-with-the-logging-agent
+* https://kubernetes.io/docs/tasks/access-application-cluster/communicate-containers-same-pod-shared-volume/
+* https://kubernetes.io/blog/2015/06/the-distributed-system-toolkit-patterns/

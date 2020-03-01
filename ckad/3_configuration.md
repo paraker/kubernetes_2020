@@ -431,10 +431,16 @@ kubectl describe my-resource-pod
 # generating yaml files
 A quick and easy way to generate a formatted yaml file for you is through `kubectl run`.<br>
 
+deployment
 ```
 # generate a deployment yaml file, ready to be edited by you
 kubectl run my-sample-deploy --image busybox --dry-run -o yaml > my-sample-deploy.yaml
 # note how certain field are left empty with {}. This does not mean they're maps, it just means they're empty, afaik.
+```
+
+pod
+```
+kubectl run fruit-service --image linuxacademycontent/legacy-fruit-service:1 --dry-run -o yaml --generator=run-pod/v1> pod.yaml
 ```
 
 ## generate with kubectl create
