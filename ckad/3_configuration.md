@@ -3,14 +3,27 @@ A `configMap` is a kubernetes `Object (API primitive)` that stores configuration
 This key-value config can be used to configure software running in a container, by referencing the `configMap` in the `Pod spec`.<br>
 
 ## create configMap
+Use individual values per file
 ```yaml
 apiVersion: v1  # mandatory api version
-kind: configMap  # specify object to be a configMap
+kind: ConfigMap  # specify object to be a configMap
 metadata:  # mandatory metadata
   name: my-config-map  # name to reference in pods!
 data:  # mandatory data block for configMap
   myKey: myValue  # key-value data
   anotherKey: anotherValue  # key-value data
+```
+
+Use many values in a single file - good for app configs for example
+```yaml
+apiVersion: v1  # mandatory api version
+kind: ConfigMap  # specify object to be a configMap
+metadata:  # mandatory metadata
+  name: my-config-map  # name to reference in pods!
+data:  # mandatory data block
+  appconfig.cfg: |-  # specify file 'candy.cfg'. Contents of file follow
+    candy.peppermint.power=100000000  # value and comment in actual file
+    candy.nougat-armor.strength=10  # value and comment in actual file
 ```
 
 List and verify your `configMap` 
@@ -260,6 +273,8 @@ myPassword
 `ServiceAccounts` allow containers running in pods to access the kubernetes API.<br>
 Some apps will require to interact with the cluster itself, `ServiceAccounts` provide a way to do that securely, with properly limited permissions.<br>
 
+If nothing is specified for a pod, the default `serviceAccount` is used.<br>
+
 Compared to user account, serviceAccounts are different.
 * User accounts are for humans. Service accounts are for processes, which run in pods.
 * User accounts are intended to be global. Names must be unique across all namespaces of a cluster, future user resource will not be namespaced. Service accounts are namespaced.
@@ -270,6 +285,31 @@ Compared to user account, serviceAccounts are different.
 Create a `serviceAccount` by this simple command
 ```
 kubectl create serviceaccount my-serviceaccount
+```
+
+## view serviceAccounts
+You can view details of the `serviceAccounts`
+
+```
+ kubectl describe serviceaccounts 
+Name:                default
+Namespace:           default
+Labels:              <none>
+Annotations:         <none>
+Image pull secrets:  <none>
+Mountable secrets:   default-token-jq77c
+Tokens:              default-token-jq77c
+Events:              <none>
+
+
+Name:                my-serviceaccount
+Namespace:           default
+Labels:              <none>
+Annotations:         <none>
+Image pull secrets:  <none>
+Mountable secrets:   my-serviceaccount-token-fx47w
+Tokens:              my-serviceaccount-token-fx47w
+Events:              <none>
 ```
 
 ## set ServiceAccount in a pod manifest
@@ -288,6 +328,13 @@ spec:  # mandatory spec block
       command: ['sh', '-c', "echo Hello, Kubernetes! && sleep 3600"]  # basic run command
 ```
 
+## verify serviceAccount usage in pod
+Didn't have another way to verify the usage 
+```
+kubectl get pod my-serviceaccount-pod -o yaml  | grep serviceAcc
+  serviceAccount: my-serviceaccount
+  serviceAccountName: my-serviceaccount
+```
 
 # SecurityContexts for Pods
 a `securityContext` for a `Pod` defines its privilege and access control settings.<br>

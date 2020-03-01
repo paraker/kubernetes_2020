@@ -29,4 +29,6 @@ kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/mast
 kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/pods/my-secret-pod.yaml
 kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/pods/my-secret-volume-pod.yaml
 
+# my-serviceaccount-pod
+kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/pods/my-serviceaccount-pod.yaml
 ```
