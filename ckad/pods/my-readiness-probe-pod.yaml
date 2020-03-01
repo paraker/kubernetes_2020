@@ -1,0 +1,14 @@
+apiVersion: 1
+kind: Pod
+metadata:
+  name: my-readiness-probe
+spec:
+  containers:
+    - name: myapp-container
+      image: nginx
+      readinessProbe:  # 200-399 http status code means OK. Anything else is not.
+        httpGet:  # do a http get request
+          path: /  # root path on the container
+          port: 80  # on port 80
+        initialDelaySeconds: 5  # wait before first check
+        periodSeconds: 5  # interval between checks

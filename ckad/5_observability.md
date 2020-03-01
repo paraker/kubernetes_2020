@@ -1,6 +1,6 @@
-# liveness and readiness probes
-`Probes` allow you to customise how kubernetes determines the status of your containers.<br>
-`Probes` can _run a command_, or _make a http request_.
+# probes
+`probes` allow you to customise how kubernetes determines the status of your containers.<br>
+`probes` can _run a command_, or _make a http request_.
 
 ## liveness probe
 Indicates whether the container is running properly.<br>
@@ -107,7 +107,14 @@ spec:
 ## readiness probe
 Indicates whether the container is ready to service requests.<br>
 Governs whether requests will be forwarded to the pod.<br>
-When a Pod is not ready, it is removed from Service load balancers.
+When a Pod is not ready, it is removed from Service load balancers.<br>
+
+An application might need to load large data or configuration files during startup, or depend on external services after startup.<br>
+In such cases, you don’t want to kill the application, but you don’t want to send it requests either. <br>
+
+```yaml
+
+```
 
 ## startup probe
 The kubelet uses `startup probes` to know when a Container application has started.<br>
