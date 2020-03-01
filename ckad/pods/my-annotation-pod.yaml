@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-annotation-pod
+  annotations:  # annotation block
+    owner: terry@linuxacademy.com  # arbitrary annotation info
+    git-commit: bdab0c6  # arbitrary annotation info
+spec:
+  containers:
+  - name: nginx
+    image: nginx
