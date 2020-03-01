@@ -35,4 +35,10 @@ kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/mast
 # my-multicontainer-pod
 kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/pods/my-multicontainer-pod.yaml
 kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/pods/my-multicontainer-proxy-pod.yaml
+
+# my-liveness-probe-pod
+kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/pods/my-liveness-exec-probe-pod.yaml
+kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/pods/my-liveness-httpget-probe-pod.yaml
+kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/pods/my-liveness-tcpsocker-probe-pod.yaml
+
 ```

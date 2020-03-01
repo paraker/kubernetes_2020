@@ -37,8 +37,10 @@ spec:
       periodSeconds: 5  # running interval
 ```
 
- The `periodSeconds` field specifies that the `kubelet` should perform a `liveness probe` every 5 seconds.<br>
- The `initialDelaySeconds` field tells the `kubelet` that it should wait 3 seconds before performing the first probe.
+**NOTE** 
+For the first 30 seconds of the Container’s life, there is a /tmp/healthy file.<br>
+So during the first 30 seconds, the command cat /tmp/healthy returns a success code.<br>
+After 30 seconds, cat /tmp/healthy returns a failure code
 
 #### httpGet
 `httpGet probe` sends an HTTP GET request to the server (technically it sends it through the worker node's `kubelet`).<br>
