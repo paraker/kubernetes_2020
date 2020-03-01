@@ -5,9 +5,9 @@ metadata:  # mandatory metadata
 spec:  # mandatory spec
   containers:  # container block
     - name: nginx  # first container
-      image: nginx  # nginx container image
-      ports:  # port exposure block
-        - containerPort: 80  # expose port 80 through clusterIP, I think
+        image: nginx  # nginx container image
+        ports:  # port exposure block
+          - containerPort: 80  # expose port 80 through clusterIP, I think
     - name: buxybox-sidecar  # second container, or 'sidecar'
         image: busybox  # busybox image
         command: ['sh', '-c', 'while true: do sleep 30; done']  # just a sleep for a while command
