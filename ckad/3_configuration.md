@@ -436,3 +436,24 @@ A quick and easy way to generate a formatted yaml file for you is through `kubec
 kubectl run my-sample-deploy --image busybox --dry-run -o yaml > my-sample-deploy.yaml
 # note how certain field are left empty with {}. This does not mean they're maps, it just means they're empty, afaik.
 ```
+
+## generate with kubectl create
+You can also kind of generate manifests with `kubectl create`.<br>
+Although you can't do this for a pod, you can do it for many other objects.<br>
+Use the auto-completion syntax or the help to see which objects that can be created.<br>
+For example here we can do it with a configMap:
+```
+kubectl create configmap myconfigmap
+configmap/myconfigmap created
+
+kubectl get configmaps myconfigmap -o yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  creationTimestamp: "2020-03-01T01:48:12Z"
+  name: myconfigmap
+  namespace: default
+  resourceVersion: "122227"
+  selfLink: /api/v1/namespaces/default/configmaps/myconfigmap
+  uid: 99c5f8db-696b-48a5-82ec-c093846c96de
+```
