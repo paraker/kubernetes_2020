@@ -48,6 +48,12 @@ spec:  # mandatory spec
       command: ['sh', '-c', 'echo hello kubernetes && sleep 3600']  # just a sleep for a while command
 ```
 
+## exec in a multi-container environment
+Since you have multiple containers in the same pod, you must now specify which container to run `exec` commands on.<br>
+Do this with the `-c` flag.
+
+
+
 ## links to real examples
 
 * https://kubernetes.io/docs/concepts/cluster-administration/logging/#using-a-sidecar-container-with-the-logging-agent

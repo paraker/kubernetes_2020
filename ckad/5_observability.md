@@ -142,3 +142,18 @@ Making sure those `probes` don’t interfere with the application startup.<br>
 This can be used to adopt `liveness checks` on slow starting containers, avoiding them getting killed by the kubelet before they are up and running.
 
 # container logging
+logs are available to us through the normal docker container style syntax `kubectl logs ${pod}`.<br>
+
+```yaml
+# example pod that logs every second
+apiVersion: v1
+kind: Pod
+metadata:
+  name: counter
+spec:
+  containers:
+  - name: count
+    image: busybox
+    args: [/bin/sh, -c, 'i=0; while true; do echo "$i: $(date)"; i=$((i+1)); sleep 1; done']  # generates a log entry every second
+```
+

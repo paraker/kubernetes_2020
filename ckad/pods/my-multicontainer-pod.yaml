@@ -8,6 +8,6 @@ spec:  # mandatory spec
       image: nginx  # nginx container image
       ports:  # port exposure block
       - containerPort: 80  # expose port 80 through clusterIP, I think
-    - name: buxybox-sidecar  # second container, or 'sidecar'
+    - name: busybox-sidecar  # second container, or 'sidecar'
       image: busybox  # busybox image
       command: ['sh', '-c', 'echo hello kubernetes && sleep 3600']  # just a sleep for a while command
