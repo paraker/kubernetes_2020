@@ -131,3 +131,18 @@ spec:
   - name: nginx
     image: nginx
 ```
+
+As usual, show your `annotations` with `kubectl describe ${object_type} ${object_name}`
+
+# deployments
+A `deployment` declares the state of `pods` and `ReplicaSets`.<br>
+`Deployments` are used for reliability, load-balancing and scaling.<br>
+You describe a desired state in a `Deployment`, and the `Deployment Controller` changes the actual state to the desired state at a controlled rate.<br>  
+
+`Rolling updates` is another feature of `deployments`.<br>
+
+`deployments` are part of the `apps api`, which as such must be reflected in the yaml manifest.
+
+```yaml
+
+```

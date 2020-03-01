@@ -1,0 +1,19 @@
+apiVersion: apps/v1  # deployments use the apps/v1 api
+kind: Deployment  # mandatory kind
+metadata:  # mandatory metadata
+  name: nginx-deployment
+spec:
+  replicas: 3       # count of pods replicas
+  selector:         # provide a way for the deployment to select pods to be part of this deployment
+    matchLabels:    # will match on pod labels
+      app: nginx    # match any pods with label "app" = "nginx". Important, must match the template labels!
+  template:         # desired state for pods in this deployment
+    metadata:       # metadata to be passed to pods
+      labels:       # labels that will be passed to pods
+        app: nginx  # set label "app": "nginx" for all pods. Important for the selector!
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.7.9
+        ports:
+        - containerPort: 80
