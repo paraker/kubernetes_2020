@@ -41,4 +41,7 @@ kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/mast
 kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/pods/my-liveness-httpget-probe-pod.yaml
 kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/pods/my-liveness-tcpsocker-probe-pod.yaml
 
+# my-readiness-probe-pod
+kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/pods/my-readiness-probe-pod.yaml
+
 ```
