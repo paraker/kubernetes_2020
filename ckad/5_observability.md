@@ -113,7 +113,26 @@ An application might need to load large data or configuration files during start
 In such cases, you don’t want to kill the application, but you don’t want to send it requests either. <br>
 
 ```yaml
-
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-readiness-probe
+spec:
+  containers:
+    - name: myapp-container
+      image: nginx
+      readinessProbe:  # 200-399 http status code means OK. Anything else is not.
+        httpGet:  # do a http get request
+          path: /  # root path on the container
+          port: 80  # on port 80
+        initialDelaySeconds: 5  # wait before first check
+        periodSeconds: 5  # interval between checks
+```
+Until the readiness probe is succesful, our container will show READY 0/1!
+```
+kubectl get pod
+NAME                 READY   STATUS    RESTARTS   AGE
+my-readiness-probe   0/1     Running   0          4s
 ```
 
 ## startup probe
@@ -121,3 +140,5 @@ The kubelet uses `startup probes` to know when a Container application has start
 If such a `probe` is configured, it disables `liveness` and `readiness` checks until it succeeds.<br>
 Making sure those `probes` don’t interfere with the application startup.<br>
 This can be used to adopt `liveness checks` on slow starting containers, avoiding them getting killed by the kubelet before they are up and running.
+
+# container logging
