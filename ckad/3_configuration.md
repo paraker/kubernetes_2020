@@ -103,13 +103,28 @@ Such information might otherwise be put in a Pod specification or in an image.<b
 Users can create secrets and the system also creates some built-in secrets.<br>
 
 To use a secret, a Pod needs to reference the secret. A secret can be used with a Pod in two ways:
-* As files in a volume mounted on one or more of its containers.
+* As files in a volume mounted or as an environment variable
 * By the kubelet when pulling images for the Pod
 
-## create a secret manually from yaml
+## risks
+* A user who can create a Pod that uses a secret can also see the value of that secret. Even if the API server policy does not allow that user to read the Secret, the user could run a Pod which exposes the secret.
+* Currently, anyone with root permission on any node can read any secret from the API server, by impersonating the kubelet. It is a planned feature to only send secrets to nodes that actually require them, to restrict the impact of a root exploit on a single node
+
+## create a secret manually with kubectl
+```
+# Create files needed for the rest of the example.
+echo -n 'admin' > ./username.txt
+echo -n 'myPassword' > ./password.txt
+```
+The kubectl create secret command packages these files into a Secret and creates the object on the API server.
+```
+kubectl create secret generic db-user-pass --from-file=./username.txt --from-file=./password.txt
+```
+
+## create a secret manually from a manifest (yaml/json)
 You can use the normal `yaml` file syntax to create secrets.<br>
 There are two ways to include the sensitive data in these files; base64 encoded (`data`) or as normal strings (`stringData`).<br>
-
+`stringData` is automatically encoded to base64 when the secret is made.<br>
 ```yaml
 # Sample stringData secret
 apiVersion: v1  # mandatory api version
@@ -120,9 +135,92 @@ stringData:  # write-only convenience block to not have to deal with base64 enco
   myKey: myPassword  # configure a key-value pair as a simple string
 ```
 
-Generally after the secret has been created in kubernetes, you should/can delete the yaml file that includes the sensitive information.<br>
+```yaml
+# sample data secret
+apiVersion: v1  # mandatory api version
+kind: Secret  # Object to store sensitive data
+metadata:  # mandatory metadata block
+  name: my-data-secret # name to be referenced in pods/deployments!
+data:  # arbitrary data field, requires base64 encoding
+  username: YWRtaW4=  # 'admin' encoded with base64
+  password: LW0gbXlwYXNzd29yZAo=  # 'mypassword' encoded with base64
+```
 
-## using secret from a pod spec
+Generally after the secret has been created in kubernetes, you should/can delete the yaml file that includes the sensitive information.<br>
+Do **NOT** check in files like this to version control, obviously.
+
+## create a secret from a secret generator
+
+### view secrets
+You can use `get` and `describe` as usual to view your secrets.<br>
+Values are hidden from your eyes, but size is shown.
+```
+kubectl describe secrets my-stringdata-secret 
+Name:         my-stringdata-secret
+Namespace:    default
+Labels:       <none>
+Annotations:  <none>
+
+Type:  Opaque
+
+Data
+====
+myKey:  10 bytes
+
+```
+
+### view base64 data of secrets
+You can view the base64 encoded values of your secrets with `-o yaml`.<br>
+```
+kubectl get secrets my-stringdata-secret -o yaml
+apiVersion: v1
+data:
+  myKey: bXlQYXNzd29yZA==
+kind: Secret
+metadata:
+  creationTimestamp: "2020-02-29T23:43:01Z"
+  name: my-stringdata-secret
+  namespace: default
+  resourceVersion: "104053"
+  selfLink: /api/v1/namespaces/default/secrets/my-stringdata-secret
+  uid: 5a719dd0-dcd4-452e-b910-d3e6f6f95919
+type: Opaque
+```
+
+### decode secret
+You can get the clear-text sensitive data back through base64 --decode
+
+```
+echo bXlQYXNzd29yZA== | base64 --decode
+myPassword
+```
+
+## use secret in a pod as environment variable
+Exactly like we can use a config map we can use the `secret` as an environment variable.<br>
+
+```yaml
+# Use secret as an environment variable in a pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-secret-pod
+spec:
+  containers:
+  - name: myapp-container
+    image: busybox
+    command: ['sh', '-c', "echo Hello, Kubernetes && sleep 3600"]  # simple hello world and stay awake for 1 hour
+    env:  # specify environment variables
+    - name: MY_PASSWORD  # create a name of the environment variable
+      valueFrom:  # grab the value from an external source,
+        secretKeyRef:  # refer to a a secret
+          name: my-secret  # specifying the secret map's name
+          key: myKey  # specify the key-value we want to set for our variable
+```
+# verify secret as an environment variable
+kubectl exec -it my-secret-pod sh
+/ # env | grep MY
+MY_PASSWORD=myPassword
+```
 
 # SecurityContexts for Pods
 a `securityContext` for a `Pod` defines its privilege and access control settings.<br>
