@@ -1,0 +1,14 @@
+# in this case we are using the deployment https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/deployments/my-nginx-deployment.yaml
+
+apiVersion: v1  # mandatory apiversion
+kind: Service  # mandatory kind
+metadata:  # mandatory metadata
+  name: my-service  # just a name
+spec:  # mandatory spec
+  type: ClusterIP  # ClusterIP: Exposes the Service on a cluster-internal IP. Choosing this value makes the Service only reachable from within the cluster. This is the default ServiceType.
+  selector:  # label, equality, set or combined selector, your choice I believe
+    app: nginx  # label selector. matches any app labelled "nginx"
+  ports:  # mandatory ports block for exposure
+  - protocol: TCP
+    port: 8080  # port to expose on the cluster ip in this case
+    targetPort: 80  # port on the container, nginx runs on port 80 by default. See this in kubectl describe pod <name>

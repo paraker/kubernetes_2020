@@ -151,16 +151,16 @@ This is done imperatively with the command `kubectl autoscale deployment <deploy
 Not sure how this is done through `yaml`.
 
 # services
-Kubernetes Pods are mortal. They are born and when they die, they are not resurrected.<br>
-If you use a Deployment to run your app, it can create and destroy Pods dynamically.<br>
-Each Pod gets its own IP address, however in a Deployment, the set of Pods running in one moment in time could be different from the set of Pods running that application a moment later.
+Kubernetes `Pods` are mortal. They are born and when they die, they are not resurrected.<br>
+If you use a `Deployment` to run your app, it can create and destroy `Pods` dynamically.<br>
+Each `Pod` gets its own IP address, however in a `Deployment`, the set of `Pods` running in one moment in time could be different from the set of Pods running that application a moment later.
 
-`Services` is an abstraction of a logical set of pods.<br>
-`Services` defines a policy (technically an API endpoint) of how you can access these pods.<br>
-So for pods to be able to talk to each other and maintain that connectivity, you need `services`.<br>
+`services` is an abstraction of a logical set of pods.<br>
+`services` defines a policy (technically an `API endpoint`) of how you can access these pods.<br>
+So for `pods` to be able to talk to each other and maintain that connectivity, you need `services`.<br>
 
 Also, for your own web connectivity for example to a web service, you need to expose the services to the outside world.<br>
-If not, the pod's internal cluster ip address will never be reachable by your computer.<br>
+If not, the pod's `internal cluster ip` address will never be reachable by your computer.<br>
 
 ## ServiceTypes - four types of services
 There are four types of services that you can create with kubernetes:
@@ -227,10 +227,10 @@ Events:                   <none>
 ```
 
 # ingress - HTTP/S
-A different approach than services to expose HTTP/S.<br>
-Ingress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster.<br>
-Traffic routing is controlled by rules defined on the Ingress resource.<br>
-Ingress can provide load balancing, SSL termination and name-based virtual hosting.<br>
+`ingress` is an alternative approach to `services` to expose HTTP/S.<br>
+`ingress` exposes HTTP and HTTPS routes from outside the cluster to services within the cluster.<br>
+Traffic routing is controlled by rules defined on the `ingress` resource.<br>
+`ingress` can provide load balancing, SSL termination and name-based virtual hosting.<br>
 This is typically the service that is used in production systems that faces the Internet.
 
 ## ingress resource
