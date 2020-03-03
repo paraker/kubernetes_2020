@@ -182,7 +182,8 @@ replicas so that there is no downtime.
 ## rollouts with kubectl
 `kubectl set image` is the command to be used for imperative action.<br>
 This is how can be executed in a basic form `kubectl set image ${deployment_name} ${image_name}=${image}:${version}`<br>
-`--record` can be used to record information about the update so that it can be rolled back later.
+`--record` can be used to record information about the update so that it can be rolled back later.<br>
+Not 100% sure about what information, but at least the `--record` adds information to the `CHANGE-CAUSE` field in the `kubectl rollout history` output.
 
 ```
 # update from nginx:1.7.1 to nginx:1.7.9
