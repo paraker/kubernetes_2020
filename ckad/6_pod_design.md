@@ -250,3 +250,8 @@ spec:
       maxUnavailable: 25%  # max number of replicas that can be unavailable during an udpate
     type: RollingUpdate
 ```
+
+# jobs and cronJobs
+`jobs` can be utilised to run a workload until it completes.<br>
+The `job` will create one or more `pods`. <br>
+When the `job` is completed the container will exit and the `pod` will enter the `completed` state.<br>
