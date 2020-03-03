@@ -1,0 +1,18 @@
+apiVersion: batch/v1beta1  # mandatory api version
+kind: CronJob  # mandatory kind
+metadata: # mandatory metadata
+  name: hello  # just set a name
+spec:  # mandatory spec
+  schedule: "*/1 * * * *"  # cron expression
+  jobTemplate:  # a template for a job that will be run/generated
+    spec:  # job spec
+      template: # nested job template, this is what will be passed to containers
+        spec:  # container spec
+          containers:
+          - name: hello # name pod hello
+            image: busybox  # run busybox container
+            args:  # run these arguments to busybox
+            - /bin/sh
+            - -c
+            - date; echo Hello from the Kubernetes cluster
+          restartPolicy: OnFailure  # restart if it fails

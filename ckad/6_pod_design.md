@@ -251,7 +251,7 @@ spec:
     type: RollingUpdate
 ```
 
-# jobs and cronJobs
+# jobs - one-off executions in pods
 `jobs` can be utilised to run a workload until it completes.<br>
 The `job` will create one or more `pods`. <br>
 When the `job` is completed the container will exit and the `pod` will enter the `completed` state.<br>
@@ -274,9 +274,22 @@ spec:  # mandatory spec
 ```
 
 This is as normal deployed as a file with `kubectl create -f <yaml file>`.<br>
-It runs and then finishes like it's supposed to.
+
+## view job and pods
+List `job` like this.
+```
+kubectl get job
+NAME   COMPLETIONS   DURATION   AGE
+pi     1/1           27s        3m55s
+```
+
+Since the `job` actually runs a pod we can list `logs` and see how the `pod` finishes like it's supposed to.
 ```
 kubectl get pods
 NAME                                  READY   STATUS      RESTARTS   AGE
 pi-nnj9x                              0/1     Completed   0          38s
 ```
+
+# cronJobs - scheduled jobs
+`cronjobs` are just like what they sound like, scheduled `jobs`.<br>
+`cronJobs` are part of the batch/v1beta1 api. 
