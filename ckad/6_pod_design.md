@@ -181,7 +181,7 @@ replicas so that there is no downtime.
 
 ## rollouts with kubectl
 `kubectl set image` is the command to be used for imperative action.<br>
-This is how can be executed in a basic form `kubectl set image $deployment_name $image_name=$image:$version`<br>
+This is how can be executed in a basic form `kubectl set image ${deployment_name} ${image_name}=${image}:${version}`<br>
 `--record` can be used to record information about the update so that it can be rolled back later.
 
 ```
@@ -189,6 +189,9 @@ This is how can be executed in a basic form `kubectl set image $deployment_name 
 kubectl set image deployment/rolling-deployment nginx=nginx:1.7.9 --record
 deployment.apps/rolling-deployment image updated
 ```
+
+## get status of rollout
+You can get the status of the rollout by executing `kubectl get rollout status deployment/${deployment_name}`
 
 ## history of update revisions
 We can check revisions with `kubectl rollout history`.<br>
@@ -221,7 +224,7 @@ Pod Template:
     Mounts:	<none>
   Volumes:	<none>
 ```
-## rollback with kubectl 
+## rollback (rollout undo) with kubectl 
 We can easily rollback if our deployment update failed for whatever reason.<br>
 We can choose a particular revision with `--to-revision=<revision number>`<br>
 With the command simply executed by itself without the `--to-revision` flag, it will simply roll back one revision backwards.
@@ -290,6 +293,52 @@ NAME                                  READY   STATUS      RESTARTS   AGE
 pi-nnj9x                              0/1     Completed   0          38s
 ```
 
-# cronJobs - scheduled jobs
+# cronjobs - scheduled jobs
 `cronjobs` are just like what they sound like, scheduled `jobs`.<br>
-`cronJobs` are part of the batch/v1beta1 api. 
+`cronjobs` are part of the batch/v1beta1 api. 
+
+This is how a basic cronJob is defined in a manifest.
+```yaml
+apiVersion: batch/v1beta1  # mandatory api version
+kind: CronJob  # mandatory kind
+metadata: # mandatory metadata
+  name: hello  # just set a name
+spec:  # mandatory spec
+  schedule: "*/1 * * * *"  # cron expression
+  jobTemplate:  # desired state for job
+    spec:  # job spec
+      template: # nested job template, desired state for pods in this job
+        spec:  # container spec
+          containers:
+          - name: hello # name pod hello
+            image: busybox  # run busybox container
+            args:  # run these arguments to busybox
+            - /bin/sh
+            - -c
+            - date; echo Hello from the Kubernetes cluster
+          restartPolicy: OnFailure  # restart if it fails
+```
+
+## view cronjobs and pods
+View your `cronjobs` like normal with kubectl get.
+```
+# cronJob has not run yet, LAST SCHEDULE is <none>
+kubectl get cronjobs
+NAME    SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+hello   */1 * * * *   False     0        <none>          38s
+
+# cronJob has now run 60 seconds ago
+kubectl get cronjobs
+NAME    SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+hello   */1 * * * *   False     0        60s             2m42s
+```
+
+This is a good time to view the `pods` that should have been created by the `cronjob`.
+```
+# a pod is created and completed for every cronjob execution.
+ kubectl get pods
+NAME                                  READY   STATUS      RESTARTS   AGE
+hello-1583227620-l7pxs                0/1     Completed   0          2m27s
+hello-1583227680-vfsdr                0/1     Completed   0          87s
+hello-1583227740-rxx54                0/1     Completed   0          27s
+```

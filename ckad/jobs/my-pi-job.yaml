@@ -3,7 +3,7 @@ kind: Job  # mandatory kind
 metadata:  # mandatory metadata
   name: pi  # name our job
 spec:  # mandatory spec
-  template: # Desired state for pods in this job. Much like the deployment template.
+  template: # Desired state for pods in this job. Much like the deployment template has a desired state for pods (in a template)
     spec:
       containers:
       - name: pi

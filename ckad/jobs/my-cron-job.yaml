@@ -4,9 +4,9 @@ metadata: # mandatory metadata
   name: hello  # just set a name
 spec:  # mandatory spec
   schedule: "*/1 * * * *"  # cron expression
-  jobTemplate:  # a template for a job that will be run/generated
+  jobTemplate:  # desired state for job
     spec:  # job spec
-      template: # nested job template, this is what will be passed to containers
+      template: # nested job template, desired state for pods in this job
         spec:  # container spec
           containers:
           - name: hello # name pod hello
