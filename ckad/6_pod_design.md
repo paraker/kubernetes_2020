@@ -175,9 +175,78 @@ simply use the `kubectl edit deployment <deployment name>`.<br>
 This gives you an interactive way to for example increase or decrease your `replicas`.
 The `Deployment Controller` will take care of the job for you once you declared what you want.
 
-# Rolling updates and Rollbacks
+# rollouts and rollbacks
 `rolling updates` provide a way to update a deployment to a new container version by gradually updating
 replicas so that there is no downtime.
 
-## execute with kubectl
-`kubectl set image` is the 
+## rollouts with kubectl
+`kubectl set image` is the command to be used for imperative action.<br>
+This is how can be executed in a basic form `kubectl set image $deployment_name $image_name=$image:$version`<br>
+`--record` can be used to record information about the update so that it can be rolled back later.
+
+```
+# update from nginx:1.7.1 to nginx:1.7.9
+kubectl set image deployment/rolling-deployment nginx=nginx:1.7.9 --record
+deployment.apps/rolling-deployment image updated
+```
+
+## history of update revisions
+We can check revisions with `kubectl rollout history`.<br>
+In this case we have three revisions. One of them (revision 5) has a failed image, nginx:1.8.5 doesn't exist.
+```
+kubectl rollout history deployment/rolling-deployment
+deployment.apps/rolling-deployment 
+REVISION  CHANGE-CAUSE
+3         kubectl set image deployment/rolling-deployment nginx=nginx:1.7.1 --record=true
+4         kubectl set image deployment/rolling-deployment nginx=nginx:1.7.9 --record=true
+5         kubectl set image deployment/rolling-deployment nginx=nginx:1.8.5 --record=true
+```
+
+You can get details about a particular revision by specifying `revision=<revision>`<br>
+Let's do that for our failing image revision, number 5.
+
+```
+kubectl rollout history deployment/rolling-deployment --revision=5
+deployment.apps/rolling-deployment with revision #5
+Pod Template:
+  Labels:	app=nginx
+	pod-template-hash=8687d6cfdd
+  Annotations:	kubernetes.io/change-cause: kubectl set image deployment/rolling-deployment nginx=nginx:1.8.5 --record=true
+  Containers:
+   nginx:
+    Image:	nginx:1.8.5
+    Port:	80/TCP
+    Host Port:	0/TCP
+    Environment:	<none>
+    Mounts:	<none>
+  Volumes:	<none>
+```
+## rollback with kubectl 
+We can easily rollback if our deployment update failed for whatever reason.<br>
+We can choose a particular revision with `--to-revision=<revision number>`<br>
+With the command simply executed by itself without the `--to-revision` flag, it will simply roll back one revision backwards.
+```
+# specific revision rollback, let's go back to nginx:1.7.9 that was working
+kubectl rollout undo deployment/rolling-deployment --to-revision=4
+deployment.apps/rolling-deployment rolled back
+```
+
+## yaml manifest rollout strategy config
+The yaml manifest has a `strategy` section.<br>
+These are the default values that came by us not specifying anything in our deployment manifest.<br>
+Let's have a look at two specific values in the `strategy` section, namely `maxSurge` and `maxUnavailable`.<br>
+These allow you to have fine-grained control during your rolling updates.
+```yaml
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 3
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: nginx
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%  # This allows the replica count to go beyond the replica value set in the deployment during an update.
+      maxUnavailable: 25%  # max number of replicas that can be unavailable during an udpate
+    type: RollingUpdate
+```
