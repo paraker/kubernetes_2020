@@ -1,4 +1,4 @@
-# use pods in this
+# use pods in this very directory
 
 apiVersion: networking.k8s.io/v1  # newtork policies is part of networking.k8s.io api
 kind: NetworkPolicy  # mandatory kind
@@ -16,6 +16,13 @@ spec:  # mandatory spec
     - podSelector:  # selector that can probably be label, equality, set or combined.
         matchLabels:  # we use label as selector
           allow-access: "true"  # if label "allow-access" is set to "true" the source pod will get access
+    - ipBlock:  # we also select on IP addresses to be more specific
+        cidr: 172.17.0.0/16
+        except:
+          - 172.17.1.0/24
+    - namespaceSelector:  # and thirdly we select on namespace too! now we are super specific
+        matchLabels:
+          project: myproject  # namespaces can have labels too
     ports:
     - protocol: TCP
       port: 80  # allow traffic on this port

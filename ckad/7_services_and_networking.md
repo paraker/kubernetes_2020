@@ -147,5 +147,49 @@ Commercial support is available at
 
 ## manifest for network policy
 ```yaml
+# use pods in this very directory
 
+apiVersion: networking.k8s.io/v1  # newtork policies is part of networking.k8s.io api
+kind: NetworkPolicy  # mandatory kind
+metadata:  # mandatory metadata
+  name: my-network-policy  # just a name
+spec:  # mandatory spec
+  podSelector:  # block for selector. label, equality, set or combined selector, your choice I believe
+    matchLabels:  # we choose label selector
+      app: secure-app  # any label "app" matching "secure-app" value will be target
+  policyTypes:  # specify which whitelist policies that should be applied
+  - Ingress     # defines that ingress ACL is applied
+  - Egress      # defines that egress ACL is applied too
+  ingress:      # define our ingress ACL
+  - from:       # define source to permit
+    - podSelector:  # selector that can probably be label, equality, set or combined.
+        matchLabels:  # we use label as selector
+          allow-access: "true"  # if label "allow-access" is set to "true" the source pod will get access
+    - ipBlock:  # we also select on IP addresses to be more specific
+        cidr: 172.17.0.0/16
+        except:
+          - 172.17.1.0/24
+    - namespaceSelector:  # and thirdly we select on namespace too! now we are super specific
+        matchLabels:
+          project: myproject  # namespaces can have labels too
+    ports:
+    - protocol: TCP
+      port: 80  # allow traffic on this port
+  egress:       # egress ACL definition
+  - to:         # define destination to permit
+    - podSelector:  # another pod selector. can probably contain label, equality, set or combined.
+        matchLabels:  # we choose to match on destination pods' labels
+          allow-access: "true"  # if destination pod has label "allow-access" set to "true" then access is granted.
+    ports:
+    - protocol: TCP
+      port: 80  # permit outbound port 80 to pods with the above label
 ```
+
+### show network policies
+Show current policies with `kubectl get networkpolicies`
+```
+kubectl get networkpolicies
+NAME                POD-SELECTOR     AGE
+my-network-policy   app=secure-app   44s
+```
+
