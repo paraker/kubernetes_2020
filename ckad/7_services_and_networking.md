@@ -193,3 +193,45 @@ NAME                POD-SELECTOR     AGE
 my-network-policy   app=secure-app   44s
 ```
 
+### show network policy details
+show network policy details with `kubectl describe networkpolicies <name>`
+
+```
+ kubectl describe networkpolicy
+Name:         my-network-policy
+Namespace:    default
+Created on:   2020-03-03 11:30:25 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=secure-app
+  Allowing ingress traffic:
+    To Port: 80/TCP
+    From:
+      PodSelector: allow-access=true
+    From:
+      IPBlock:
+        CIDR: 172.17.0.0/16
+        Except: 172.17.1.0/24
+    From:
+      NamespaceSelector: project=myproject
+  Allowing egress traffic:
+    To Port: 80/TCP
+    To:
+      PodSelector: allow-access=true
+  Policy Types: Ingress, Egress
+```
+
+## test pod to pod access again - with network policy attached
+My tests failed here. I can still access the secure pod from the client pod.<br>
+I think this may be because my plugin installation may have failed.<br>
+At least I was met with this error.
+```
+error: unable to recognize "canal.yaml": no matches for kind "DaemonSet" in version "extensions/v1beta1"
+```
+
+Anyhow, you get the idea. Re-run the `kubectl exec network-policy-client-pod -- curl 10.244.2.37` command to test.<br>
+It should fail at this stage.<br>
+You can repair the connectivity by running `kubectl edit pod network-policy-client-pod` and a metadata `labels` field with `allow-access: "true"`.
+
+
