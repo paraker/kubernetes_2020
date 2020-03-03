@@ -9,5 +9,5 @@ spec:  # mandatory spec
       - name: pi
         image: perl  # run a perl container
         command: ["perl",  "-Mbignum=bpi", "-wle", "print bpi(2000)"]  # print pi or whatever
-      restartPolicy: Never
-  backoffLimit: 4
+      restartPolicy: Never  # never restart, just execute the job once.
+  backoffLimit: 4  # how many times it will re-attempt if it would fail.

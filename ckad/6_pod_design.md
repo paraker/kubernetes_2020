@@ -255,3 +255,28 @@ spec:
 `jobs` can be utilised to run a workload until it completes.<br>
 The `job` will create one or more `pods`. <br>
 When the `job` is completed the container will exit and the `pod` will enter the `completed` state.<br>
+
+This will create a simple job running a perl container that prints our a large number of pi decimals.
+```yaml
+apiVersion: batch/v1  # jobs are part of the batch api
+kind: Job  # mandatory kind
+metadata:  # mandatory metadata
+  name: pi  # name our job
+spec:  # mandatory spec
+  template: # Desired state for pods in this job. Much like the deployment template.
+    spec:
+      containers:
+      - name: pi
+        image: perl  # run a perl container
+        command: ["perl",  "-Mbignum=bpi", "-wle", "print bpi(2000)"]  # print pi or whatever
+      restartPolicy: Never  # never restart, just execute the job once.
+  backoffLimit: 4  # how many times it will re-attempt if it would fail.
+```
+
+This is as normal deployed as a file with `kubectl create -f <yaml file>`.<br>
+It runs and then finishes like it's supposed to.
+```
+kubectl get pods
+NAME                                  READY   STATUS      RESTARTS   AGE
+pi-nnj9x                              0/1     Completed   0          38s
+```
