@@ -100,3 +100,52 @@ kubectl apply -f canal.yaml
 ```
 
 ## sample pods for testing
+Use these pods for testing out that a pod has access to another pod by default.
+```
+kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/networkpolicies/network-policy-secure-pod.yaml
+kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/networkpolicies/network-policy-client-pod.yaml
+```
+
+Test access with curl
+```
+# get IP of "secure pod"
+kubectl get pods network-policy-secure-pod -o wide
+NAME                        READY   STATUS    RESTARTS   AGE    IP            NODE                    NOMINATED NODE   READINESS GATES
+network-policy-secure-pod   1/1     Running   0          118s   10.244.2.37   par3c.mylabserver.com   <none>           <none>
+
+# connect to it with curl
+kubectl exec network-policy-client-pod -- curl 10.244.2.37
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   612  100   612    0     0   312k      0 --:--:-- --:--:-- --:--:--  597k
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+```
+
+## manifest for network policy
+```yaml
+
+```

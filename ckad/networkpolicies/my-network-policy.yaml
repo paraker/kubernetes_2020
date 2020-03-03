@@ -8,22 +8,22 @@ spec:  # mandatory spec
   podSelector:  # block for selector. label, equality, set or combined selector, your choice I believe
     matchLabels:  # we choose label selector
       app: secure-app  # any label "app" matching "secure-app" value will be target
-  policyTypes:
-  - Ingress
-  - Egress
-  ingress:
-  - from:
-    - podSelector:
-        matchLabels:
-          allow-access: "true"
+  policyTypes:  # specify which whitelist policies that should be applied
+  - Ingress     # defines that ingress ACL is applied
+  - Egress      # defines that egress ACL is applied too
+  ingress:      # define our ingress ACL
+  - from:       # define source to permit
+    - podSelector:  # selector that can probably be label, equality, set or combined.
+        matchLabels:  # we use label as selector
+          allow-access: "true"  # if label "allow-access" is set to "true" the source pod will get access
     ports:
     - protocol: TCP
-      port: 80
-  egress:
-  - to:
-    - podSelector:
-        matchLabels:
-          allow-access: "true"
+      port: 80  # allow traffic on this port
+  egress:       # egress ACL definition
+  - to:         # define destination to permit
+    - podSelector:  # another pod selector. can probably contain label, equality, set or combined.
+        matchLabels:  # we choose to match on destination pods' labels
+          allow-access: "true"  # if destination pod has label "allow-access" set to "true" then access is granted.
     ports:
     - protocol: TCP
-      port: 80
+      port: 80  # permit outbound port 80 to pods with the above label
