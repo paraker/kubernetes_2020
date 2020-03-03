@@ -13,8 +13,8 @@ If not, the pod's `internal cluster ip` address will never be reachable by your 
 ## ServiceTypes - four types of services
 There are four types of services that you can create with kubernetes:
 * ClusterIP: Exposes the Service on a cluster-internal IP. Choosing this value makes the Service only reachable from within the cluster. This is the default ServiceType.
-* LoadBalancer: Exposes the Service externally using a cloud provider’s load balancer. NodePort and ClusterIP Services, to which the external load balancer routes, are automatically created.
 * NodePort: Exposes the Service on each Node’s IP at a static port (the NodePort). A ClusterIP Service, to which the NodePort Service routes, is automatically created. You’ll be able to contact the NodePort Service, from outside the cluster, by requesting <NodeIP>:<NodePort>.
+* LoadBalancer: Exposes the Service externally using a cloud provider’s load balancer. NodePort and ClusterIP Services, to which the external load balancer routes, are automatically created.
 * ExternalName: Maps the Service to the contents of the externalName field (e.g. foo.bar.example.com), by returning a CNAME record 
 
 ## imperative service example
@@ -22,10 +22,22 @@ This is an example of how you can imperatively create a service with `kubectl`<b
 `kubectl expose deployment web1 --port=80 --type=LoadBalancer`
 
 ## services example with selector (labels) - expose ClusterIP
-Suppose you have a set of Pods that each listen on TCP port 9376 and carry a `label` `app=MyApp`
+Let's use our nginx deployment and expose it to the rest of the cluster through a cluster IP
 ```yaml
-# example services yaml file
+# in this case we are using the deployment https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/deployments/my-nginx-deployment.yaml
 
+apiVersion: v1  # mandatory apiversion
+kind: Service  # mandatory kind
+metadata:  # mandatory metadata
+  name: my-service  # just a name
+spec:  # mandatory spec
+  type: ClusterIP  # ClusterIP: Exposes the Service on a cluster-internal IP. Choosing this value makes the Service only reachable from within the cluster. This is the default ServiceType.
+  selector:  # label, equality, set or combined selector, your choice I believe
+    app: nginx  # label selector. matches any app labelled "nginx"
+  ports:  # mandatory ports block for exposure
+  - protocol: TCP
+    port: 8080  # port to expose on the cluster ip in this case
+    targetPort: 80  # port on the container, nginx runs on port 80 by default. See this in kubectl describe pod <name>
 ```
 
 Apply this with `kubectl apply -f service.yaml`.<br>
@@ -38,28 +50,53 @@ You can view your exposed services by issuing the command `kubectl get service <
 
 ## View your services
 ```bash
-kubectl get service web1
-NAME   TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE
-web1   LoadBalancer   10.102.40.76   <pending>     80:30067/TCP   131m
+kubectl get svc my-service 
+NAME         TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
+my-service   ClusterIP   10.101.48.48   <none>        8080/TCP   2m9s
+```
+
+## view endpoints on pods
+The `endpoints` is where the service hooks in to the pods.<br>
+In our case, we have three replicas so we will have three `endpoints`.
+Show these with `kubectl get endpoints <svc name>`
+```
+ kubectl get endpoints my-service 
+NAME         ENDPOINTS                                      AGE
+my-service   10.244.1.47:80,10.244.1.48:80,10.244.2.36:80   68s
 ```
 
 ## View details of your services
 With the `kubectl describe` command you get a new depth of information about your environment.<br>
 With this you can see the namespace, IPs, ports, etc etc
 ```bash
-kubectl describe service web1
-Name:                     web1
-Namespace:                default
-Labels:                   app=web1
-Annotations:              <none>
-Selector:                 app=web1
-Type:                     LoadBalancer
-IP:                       10.102.40.76
-Port:                     <unset>  80/TCP
-TargetPort:               80/TCP
-NodePort:                 <unset>  30067/TCP
-Endpoints:                172.17.0.10:80,172.17.0.11:80,172.17.0.12:80 + 17 more...
-Session Affinity:         None
-External Traffic Policy:  Cluster
-Events:                   <none>
+kubectl describe svc/my-service
+Name:              my-service
+Namespace:         default
+Labels:            <none>
+Annotations:       <none>
+Selector:          app=nginx
+Type:              ClusterIP
+IP:                10.101.48.48
+Port:              <unset>  8080/TCP
+TargetPort:        80/TCP
+Endpoints:         10.244.1.47:80,10.244.1.48:80,10.244.2.36:80
+Session Affinity:  None
+Events:            <none>
 ```
+
+# network policies
+By default, all `pods` in a cluster can communicate with any other `pod`, and reach out to any available IP.<br>
+So for example, the `pod` IP we see in `kubectl get pods <name> -o wide` can be accessed by other `pods`!<br>
+
+`networkPolicies` let's us restrict and control access between your `pods`.<br>
+Note how `multi-container pods` would still be able to access each other.<br>
+
+## plugin to support network policies
+In order for `networkPolicies` to work, we need a network plugin that supports that.<br>
+`canal` is such a plugin. Download and install like this.
+```
+wget -O canal.yaml https://docs.projectcalico.org/v3.5/getting-started/kubernetes/installation/hosted/canal/canal.yaml
+kubectl apply -f canal.yaml
+```
+
+## sample pods for testing

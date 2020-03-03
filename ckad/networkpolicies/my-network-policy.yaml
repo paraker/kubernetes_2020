@@ -1,0 +1,29 @@
+# use pods in this
+
+apiVersion: networking.k8s.io/v1  # newtork policies is part of networking.k8s.io api
+kind: NetworkPolicy  # mandatory kind
+metadata:  # mandatory metadata
+  name: my-network-policy  # just a name
+spec:  # mandatory spec
+  podSelector:  # block for selector. label, equality, set or combined selector, your choice I believe
+    matchLabels:  # we choose label selector
+      app: secure-app  # any label "app" matching "secure-app" value will be target
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          allow-access: "true"
+    ports:
+    - protocol: TCP
+      port: 80
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          allow-access: "true"
+    ports:
+    - protocol: TCP
+      port: 80
