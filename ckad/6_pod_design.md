@@ -143,6 +143,41 @@ You describe a desired state in a `Deployment`, and the `Deployment Controller` 
 
 `deployments` are part of the `apps api`, which as such must be reflected in the yaml manifest.
 
-```yaml
+## create deployment with manifest
+Something like the below can be used to create a deployment.<br>
 
+```yaml
+apiVersion: apps/v1  # deployments use the apps/v1 api
+kind: Deployment  # mandatory kind
+metadata:  # mandatory metadata
+  name: nginx-deployment
+spec:
+  replicas: 3       # count of pods replicas
+  selector:         # The selector field defines how the Deployment finds which Pods to manage
+    matchLabels:    # will match on pod labels
+      app: nginx    # match any pods with label "app" = "nginx". Important, must match the template labels!
+  template:         # desired state for pods in this deployment
+    metadata:       # metadata to be passed to pods
+      labels:       # labels that will be passed to pods
+        app: nginx  # set label "app": "nginx" for all pods. Important for the selector!
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.7.9
+        ports:
+        - containerPort: 80
 ```
+
+Use `kubectl create/get/describe` as usual to create display and view your deployments.<br>
+
+## edit deployments
+simply use the `kubectl edit deployment <deployment name>`.<br>
+This gives you an interactive way to for example increase or decrease your `replicas`.
+The `Deployment Controller` will take care of the job for you once you declared what you want.
+
+# Rolling updates and Rollbacks
+`rolling updates` provide a way to update a deployment to a new container version by gradually updating
+replicas so that there is no downtime.
+
+## execute with kubectl
+`kubectl set image` is the 
