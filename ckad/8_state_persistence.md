@@ -34,8 +34,12 @@ This is a nice and robust abstraction layer that helps you mount storage.<br>
 This is in contrast to the volumes that are mounted straight away on the pods, I think at least.<br>
 
 We are introduced to two new API resources: `PersistentVolume` and `PersistentVolumeClaim`.
-
+### types of persistent volumes
 `PVs` can be `EBS`, `AzureDisk` etc etc.
+
+### why is it good?
+* `PVCs` can say for example "I want fast storage of this type" and automagically get that type of storage provisioned<br>
+(It does so by using storageClasses) 
 
 ## PV (persistent volume)
 A PersistentVolume (PV) is a piece of storage in the cluster that has been provisioned by an administrator or dynamically provisioned using Storage Classes.<br> 

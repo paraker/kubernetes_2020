@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: my-pv
+spec:
+  storageClassName: local-storage  # Free text field. Call your storage class something arbitrary like "Fast", "Slow", "local", etc.
+  capacity:  # capacity block
+    storage: 1Gi  # 1 gibibyte
+  accessModes:  # different type of storage permits different types of access modes
+    - ReadWriteOnce  # only one pod at a time can read/write
+  hostPath:  # (Single node testing only – local storage is not supported in any way and WILL NOT WORK in a multi-node cluster)
+    path: "/mnt/data"
