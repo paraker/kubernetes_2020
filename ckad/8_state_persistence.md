@@ -45,6 +45,28 @@ We are introduced to two new API resources: `PersistentVolume` and `PersistentVo
 A PersistentVolume (PV) is a piece of storage in the cluster that has been provisioned by an administrator or dynamically provisioned using Storage Classes.<br> 
 You typically create persistent volumes with the declarative yaml approach.<br>
 
+Let's create a noob version of storage, locally on one of the nodes.
+```yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: my-pv
+spec:
+  storageClassName: local-storage  # Free text field. Call your storage class something arbitrary like "Fast", "Slow", "local", etc.
+  capacity:  # capacity block
+    storage: 1Gi  # 1 gibibyte
+  accessModes:  # different type of storage permits different types of access modes
+    - ReadWriteOnce  # only one pod at a time can read/write
+  hostPath:  # (Single node testing only – local storage is not supported in any way and WILL NOT WORK in a multi-node cluster)
+    path: "/mnt/data"
+```
+### list PV
+```
+kubectl get pv
+NAME    CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM   STORAGECLASS    REASON   AGE
+my-pv   1Gi        RWO            Retain           Available           local-storage            5s
+```
+
 ## PVC (persistent volume claim)
 A PersistentVolumeClaim (PVC) is a request for storage by a user. It is similar to a Pod.<br>
 Pods consume node resources and PVCs consume PV resources.

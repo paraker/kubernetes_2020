@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: my-pvc
+spec:
+  storageClassName: local-storage  # Important field! This is referring to the class name of the local storage!
+  accessModes:
+    - ReadWriteOnce  # this should also be the same as the PV
+  resources:  # resource limits for our request
+    requests:  # this is our request going to the PV
+      storage: 512Mi  # We request 512Mebibytes. We know 1Gibibyte is available
