@@ -69,4 +69,54 @@ my-pv   1Gi        RWO            Retain           Available           local-sto
 
 ## PVC (persistent volume claim)
 A PersistentVolumeClaim (PVC) is a request for storage by a user. It is similar to a Pod.<br>
-Pods consume node resources and PVCs consume PV resources.
+Pods consume node resources and PVCs consume PV resources.<br>
+
+So as a developer you can make a `claim` that you can later map to `pods`.<br>
+Let's make a claim for 512 Mebibytes.<br>
+
+We declare and then the system will hand out storage if it's available.
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: my-pvc
+spec:
+  storageClassName: local-storage  # Important field! This is referring to the class name of the local storage!
+  accessModes:
+    - ReadWriteOnce  # this should also be the same as the PV
+  resources:  # resource limits for our request
+    requests:  # this is our request going to the PV
+      storage: 512Mi  # We request 512 Mebibytes. We know 1 Gibibyte is available
+```
+
+### list pvc
+Great, our claim was successful.<br>
+The admins must have provisioned enough storage, awesome.
+```
+ kubectl get pvc
+NAME     STATUS   VOLUME   CAPACITY   ACCESS MODES   STORAGECLASS    AGE
+my-pvc   Bound    my-pv    1Gi        RWO            local-storage   5s
+```
+
+## Use PVC in a volume in a pod
+Now it's time to use the PVC in our pod.<br>
+This is just like a static volume mount on the pod `volumeMount`, but the `volume` part is different.
+```yaml
+kind: Pod
+apiVersion: v1
+metadata:
+  name: my-pvc-pod
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["/bin/sh", "-c", "while true; do sleep 3600; done"]
+    volumeMounts:  # Mount volumes to this pod
+    - mountPath: "/mnt/storage"  # this is where to mount it to
+      name: my-storage  # refer to the storage
+  volumes:  # create volumes for this pod
+  - name: my-storage  # call volume "my-storage"
+    persistentVolumeClaim:  # Use our previously created PVC
+      claimName: my-pvc  # use the claim called "my-pvc". Refer to the metadata section of the PVC
+```
+
