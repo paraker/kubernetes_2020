@@ -120,3 +120,17 @@ spec:
       claimName: my-pvc  # use the claim called "my-pvc". Refer to the metadata section of the PVC
 ```
 
+### describe pod volume
+We can see how the pod is consuming the volume coming from a volume claim through `kubectl describe ${pod_name}`
+```
+Volumes:
+  my-storage:
+    Type:       PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
+    ClaimName:  my-pvc
+    ReadOnly:   false
+  default-token-jq77c:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-jq77c
+    Optional:    false
+
+```
