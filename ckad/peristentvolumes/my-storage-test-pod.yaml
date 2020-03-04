@@ -8,7 +8,7 @@ spec:
     image: busybox
     command: ["/bin/sh", "-c", "while true; do sleep 3600; done"]
     volumeMounts:  # Mount volumes to this pod
-    - mountPath: "/mnt/storage"  # this is where to mount it to
+    - mountPath: "/mnt/storage/mything"  # this is where to mount it to
       name: my-storage  # refer to the storage
   volumes:  # create volumes for this pod
   - name: my-storage  # call volume "my-storage"
