@@ -114,6 +114,7 @@ NAME                        READY   STATUS    RESTARTS   AGE    IP            NO
 network-policy-secure-pod   1/1     Running   0          118s   10.244.2.37   par3c.mylabserver.com   <none>           <none>
 
 # connect to it with curl
+# note how you can use internal DNS name here too for the target service!
 kubectl exec network-policy-client-pod -- curl 10.244.2.37
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed

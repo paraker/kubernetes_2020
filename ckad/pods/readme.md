@@ -54,4 +54,7 @@ kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/mast
 # my-annotation-pod
 kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/pods/my-annotation-pod.yaml
 
+# my-volume-pod
+kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/pods/my-volume-pod.yaml
+
 ```
