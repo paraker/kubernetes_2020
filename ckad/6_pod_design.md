@@ -53,11 +53,12 @@ Do this with `kubectl describe ${pod_name} --show-labels`.<br>
 There is a section called `Labels`.
 
 ## find resources based on labels.
-See `selectors` section
+See `label selectors` section
 
 # label selectors
 Via a `label selector`, the client/user can identify a set of objects.<br>
 The `label selector` is the core grouping primitive in Kubernetes.
+Use the `kuebctl get {primitive} --selector <selector>=<value>`
 
 `label selectors` can be stacked with a comma-separated syntax.<br>
 **NOTE** when you stack labels, the first label is first used to filter, second then filters on the current result, etc.<br>
