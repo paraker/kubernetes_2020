@@ -57,8 +57,8 @@ See `label selectors` section
 
 # label selectors
 Via a `label selector`, the client/user can identify a set of objects.<br>
-The `label selector` is the core grouping primitive in Kubernetes.
-Use the `kuebctl get {primitive} --selector <selector>=<value>`
+The `label selector` is the core grouping primitive in Kubernetes.<br>
+Use the `kuebctl get {primitive} --selector <selector>=<value>`<br>
 
 `label selectors` can be stacked with a comma-separated syntax.<br>
 **NOTE** when you stack labels, the first label is first used to filter, second then filters on the current result, etc.<br>
