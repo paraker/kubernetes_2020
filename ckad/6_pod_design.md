@@ -49,7 +49,7 @@ spec:
 ```
 
 #### Show your labels
-Do this with `kubectl describe ${pod_name}`.<br>
+Do this with `kubectl describe ${pod_name} --show-labels`.<br>
 There is a section called `Labels`.
 
 ## find resources based on labels.
