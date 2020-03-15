@@ -30,4 +30,16 @@ Examples of systems that exporters can be used on are `MySQL`, `Host/OS`, `HAPro
 `Prometheus` sends a request to a `exporter target`.<br>
 The `exporter` then goes and fetches data, formats the data  and feeds data back to `Prometheus`.
 
+# service discovery
+Targets can be defined in two ways, manual configuration or with `service discovery`.<br>
+Let's focus on kubernetes for now as this is most applicable to us.<br>
+Service discovery with kubernetes is done through the kubernets api.<br>
+`Nodes`, `objects`, `kubelet` can be discovered, so pretty much anything we want.
 
+As an example, you can query a cluster for all nodes and then go and scrape them.
+
+# scraping
+prometheus is a pull-based system. It decides when things are going to be scraped.<br>
+This is done http endpoints defined in our config or with service discovery.<br>
+
+Respond to the scrape requests are parsed and then put into the storage of prometheus.<br>

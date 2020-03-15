@@ -1,0 +1,11 @@
+# Install prometheus
+Two components: `prometheus` and `cAdvisor`.<br>
+
+Do `kubectl create -f <file.yml>` on each of the files in `/content-kubernetes-prometheus-env/prometheus`.
+In this order:
+* namespace
+* clusterRole
+* configMap
+* prometheus-deployment
+* prometheus-service
+
