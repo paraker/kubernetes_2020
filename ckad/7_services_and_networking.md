@@ -13,7 +13,7 @@ If not, the pod's `internal cluster ip` address will never be reachable by your 
 ## ServiceTypes - four types of services
 There are four types of services that you can create with kubernetes:
 * ClusterIP: Exposes the Service on a cluster-internal IP. Choosing this value makes the Service only reachable from within the cluster. This is the default ServiceType.
-* NodePort: Exposes the Service on each Node’s IP at a static port (the NodePort). A ClusterIP Service, to which the NodePort Service routes, is automatically created. You’ll be able to contact the NodePort Service, from outside the cluster, by requesting <NodeIP>:<NodePort>.
+* NodePort: Exposes the Service on each Node’s IP at a static port (the NodePort). A ClusterIP Service, to which the NodePort Service routes, is automatically created. You’ll be able to contact the NodePort Service, from outside the cluster, by requesting `<NodeIP>:<NodePort>`.
 * LoadBalancer: Exposes the Service externally using a cloud provider’s load balancer. NodePort and ClusterIP Services, to which the external load balancer routes, are automatically created.
 * ExternalName: Maps the Service to the contents of the externalName field (e.g. foo.bar.example.com), by returning a CNAME record 
 
@@ -41,7 +41,7 @@ spec:  # mandatory spec
 ```
 
 Apply this with `kubectl apply -f service.yaml`.<br>
-This specification creates a new `Service object` named “my-service”, which targets TCP port 9376 on any Pod with the `app=MyApp` label and exposes port 80 to the rest of the cluster.<br>
+This specification creates a new `Service object` named “my-service”, which targets TCP port 8080 on any Pod with the `app=nginx` label and exposes port 80 to the rest of the cluster.<br>
 Kubernetes assigns this Service an IP address (sometimes called the “cluster IP”)<br>
 Note that this in only reachable by the cluster itself.<br>
 The controller for the Service selector continuously scans for Pods that match its selector (label in this case) and updates the `endpoint`.
