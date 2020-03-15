@@ -1,3 +1,2 @@
 # architecture
-[architecture]("pictures/prometheus_arhcitecture.png")
-
+architecture:![architecture](pictures/prometheus_arhcitecture.png)
