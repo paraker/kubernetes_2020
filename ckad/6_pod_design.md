@@ -344,3 +344,52 @@ hello-1583227620-l7pxs                0/1     Completed   0          2m27s
 hello-1583227680-vfsdr                0/1     Completed   0          87s
 hello-1583227740-rxx54                0/1     Completed   0          27s
 ```
+
+# horizontal pod autoscaler
+You can automgically scale deployments based on cpu usage or otherwise.
+Create a `hpa` with something like this: `kubectl autoscale deployment mydeployment --max=10 --min=5 --cpu-percent 80`
+
+## display your hpa
+
+```
+kubectl get hpa
+NAME           REFERENCE                 TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+mydeployment   Deployment/mydeployment   <unknown>/80%   5         10        5          8m52s
+```
+
+## resulting hpa yaml 
+```yaml
+apiVersion: v1
+items:
+- apiVersion: autoscaling/v1
+  kind: HorizontalPodAutoscaler
+  metadata:
+    annotations:
+      autoscaling.alpha.kubernetes.io/conditions: '[{"type":"AbleToScale","status":"True","lastTransitionTime":"2020-03-07T06:56:37Z","reason":"SucceededGetScale","message":"the
+        HPA controller was able to get the target''s current scale"},{"type":"ScalingActive","status":"False","lastTransitionTime":"2020-03-07T06:56:37Z","reason":"FailedGetResourceMetric","message":"the
+        HPA was unable to compute the replica count: unable to get metrics for resource
+        cpu: unable to fetch metrics from resource metrics API: the server is currently
+        unable to handle the request (get pods.metrics.k8s.io)"}]'
+    creationTimestamp: "2020-03-07T06:56:21Z"
+    name: mydeployment
+    namespace: default
+    resourceVersion: "367585"
+    selfLink: /apis/autoscaling/v1/namespaces/default/horizontalpodautoscalers/mydeployment
+    uid: 5165bfcb-e0cc-463d-bbe5-2d6170e29b14
+  spec:
+    maxReplicas: 10
+    minReplicas: 5
+    scaleTargetRef:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: mydeployment
+    targetCPUUtilizationPercentage: 80
+  status:
+    currentReplicas: 5
+    desiredReplicas: 0
+kind: List
+metadata:
+  resourceVersion: ""
+  selfLink: ""
+
+```
