@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-to-internet
+  labels:
+    app: pod-to-internet
+spec:
+  containers:
+  - name: pod-to-internet
+    image: alpine
+    command: ['sh', '-c', 'wget -qO- icanhazip.com']
+  restartPolicy: Never  # do not attempt to restart the container when command is finished
