@@ -1,0 +1,36 @@
+apiVersion: apps/v1  # deployments use the apps/v1 api
+kind: Deployment     # mandatory kind
+metadata:            # mandatory metadata
+  name: nginx-internal
+spec:
+  replicas: 2       # count of pods replicas
+  selector:          # provide a way for the deployment to select pods to be part of this deployment
+    matchLabels:     # will match on pod labels
+      app: nginx-internal     # match any pods with label "app" = "nginx". Important, must match the template labels!
+  template:          # desired state for pods in this deployment
+    metadata:        # metadata to be passed to pods
+      labels:        # labels that will be passed to pods
+        app: nginx-internal   # set label "app": "nginx" for all pods. Important for the selector!
+    spec:
+      containers:
+      - name: nginx-internal
+        image: nginxdemos/hello
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-internal
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+spec:
+  externalTrafficPolicy: Cluster
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: nginx-internal
+  sessionAffinity: None
+  type: LoadBalancer
