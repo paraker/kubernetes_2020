@@ -1,0 +1,34 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-to-on-internal-eks-service
+  labels:
+    app: pod-to-on-internal-eks-service
+spec:
+  containers:
+  - name: pod-to-on-internal-eks-service
+    image: alpine
+    command: [ "/bin/sh", "-c" ]
+    args:
+      - echo "netcat other internal eks cluster";
+        nc -v 100.84.131.152 8080;
+        echo "wget other internal eks cluster";
+        wget -O- http://100.84.131.152:8080 | grep title;
+        echo done;
+  restartPolicy: Never  # do not attempt to restart the container when command is finished
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-across-tgw
+  labels:
+    app: pod-across-tgw
+spec:
+  containers:
+  - name: pod-across-tgw
+    image: alpine
+    command: [ "/bin/sh", "-c" ]
+    args:
+      - echo "netcat scs dev internal eks cluster";
+        nc -v 100.84.146.170 22;
+  restartPolicy: Never  # do not attempt to restart the container when command is finished
