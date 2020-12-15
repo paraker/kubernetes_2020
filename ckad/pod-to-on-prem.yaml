@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-to-on-prem
+  labels:
+    app: pod-to-on-prem
+spec:
+  containers:
+  - name: pod-to-on-prem
+    image: alpine
+    command: [ "/bin/sh", "-c" ]
+    args:
+      - nc -v 159.79.212.69 443;
+        echo "netcat teleport 443";
+        nc -v 10.5.126.133 443;
+        wget -O- https://159.79.212.69 --no-check-certificate | grep title;
+        echo done;
+  restartPolicy: Never  # do not attempt to restart the container when command is finished
