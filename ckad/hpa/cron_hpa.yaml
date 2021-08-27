@@ -44,13 +44,13 @@ spec:
             command: [ "/bin/sh", "-c" ]
             args:
               - echo "Patching hpa to minimum 1 replica. This allows for scale down";
-                patch hpa php-apache -p '{"spec":{"minReplicas":1}}'
+                kubectl patch hpa php-apache -p '{"spec":{"minReplicas":1}}'
           restartPolicy: OnFailure
 ---
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: cron-hpa-scale-down
+  name: cron-hpa-scale-up
   namespace: cron-hpa
 spec:
   schedule: "1/2 * * * *"
@@ -65,5 +65,5 @@ spec:
             command: [ "/bin/sh", "-c" ]
             args:
               - echo "Patching hpa to minimum 5 replicas. This ensures scale up";
-                patch hpa php-apache -p '{"spec":{"minReplicas":5}}'
+                kubectl patch hpa php-apache -p '{"spec":{"minReplicas":5}}'
           restartPolicy: OnFailure
