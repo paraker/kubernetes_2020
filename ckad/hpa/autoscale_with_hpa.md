@@ -4,7 +4,10 @@ kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/mast
 # Create hpa
 kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/hpa/apache_hpa.yaml
 
-(or run kubectl autoscale deployment php-apache --cpu-percent=50 --min=1 --max=10)
+# kubectl commands
+`kubectl autoscale deployment php-apache --cpu-percent=50 --min=1 --max=10`
+
+`kubectl patch hpa php-apache -p '{"spec":{"minReplicas":7}}'` # patch to a set number of minimum replicas
 
 # increase the load on apache
 kubectl get hpa
