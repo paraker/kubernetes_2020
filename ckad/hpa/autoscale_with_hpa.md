@@ -4,6 +4,10 @@ kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/mast
 # Create hpa
 kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/hpa/apache_hpa.yaml
 
+# create cron job for hpa
+kubectl create -f https://raw.githubusercontent.com/paraker/kubernetes_2020/master/ckad/hpa/cron_hpa.yaml
+
+
 # kubectl commands
 `kubectl autoscale deployment php-apache --cpu-percent=50 --min=1 --max=10`
 
