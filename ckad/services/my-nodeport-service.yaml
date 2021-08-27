@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-service
+spec:
+  clusterIP: 10.103.254.83  # This is automatically generated for you upon creation of the nodeport service. I assume the clusterIP is what has the port 8080 open in this case.
+  ports:
+  - name: promotheus
+    nodePort: 32378  # This value is generated for you when left out. It will be random between 30000 and 32768 or something. This will be the same for all nodes. Assume that k8s translates the 8080 to this random port and then translate again to the targetport?? Not sure but that's how it seems.
+    port: 8080  # This is the port that will be exposed on the node. This is the port that you want to target with your loadbalancer or your curls/wget
+    protocol: TCP  
+    targetPort: 9090  # This is the port on the pod
+  selector:
+    app: prometheus-server  # selector field, must match pod label for "app: prometheus-server"
+  type: NodePort  # sets the type to NodePort
+status:
+  loadBalancer: {}  # no load balancer configured
